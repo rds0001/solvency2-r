@@ -3,6 +3,14 @@ on:
   push:
   pull_request:
   workflow_dispatch:
+    inputs:
+      platform:
+        description: Platform scope for a focused manual check
+        type: choice
+        default: all
+        options:
+          - all
+          - macos
 permissions:
   contents: read
 jobs:
@@ -11,12 +19,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        config:
-          - {os: ubuntu-latest, r: release}
-          - {os: ubuntu-latest, r: oldrel-1}
-          - {os: ubuntu-latest, r: devel}
-          - {os: windows-latest, r: release}
-          - {os: macos-latest, r: release}
+        config: ${{ fromJSON(inputs.platform == 'macos' && '[{"os":"macos-latest","r":"release"}]' || '[{"os":"ubuntu-latest","r":"release"},{"os":"ubuntu-latest","r":"oldrel-1"},{"os":"ubuntu-latest","r":"devel"},{"os":"windows-latest","r":"release"},{"os":"macos-latest","r":"release"}]') }}
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       R_KEEP_PKG_SOURCE: yes

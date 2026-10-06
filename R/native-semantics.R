@@ -224,6 +224,22 @@
     return(Reduce(`+`, values, init = start))
   sum(unlist(values, use.names = FALSE), start)
 }
+
+# Python math.fsum requires an accurately rounded sum, not the platform's
+# long-double accumulator. On macOS/ARM, long double has double precision.
+# Preserve the supplied binary doubles exactly, sum with enough MPFR bits for
+# their entire exponent span, then round once back to double. This does not
+# widen any regulatory threshold or reinterpret inputs as decimal amounts.
+.s2_fsum <- function(x) {
+  values <- as.numeric(unlist(.s2_iter(x), use.names = FALSE))
+  if (!length(values)) return(0)
+  if (any(!is.finite(values))) return(.s2_float(sum(values)))
+  if (length(values) == 1L) return(values[[1L]])
+  if (length(values) == 2L) return(.s2_float(values[[1L]] + values[[2L]]))
+  # Finite IEEE doubles span 2^-1074 through values below 2^1024.
+  bits <- 2098L + ceiling(log2(length(values)))
+  .s2_float(sum(Rmpfr::mpfr(values, precBits = bits)))
+}
 .s2_extreme <- function(values, largest, key = identity, default = NULL) {
   if (!length(values) && !is.null(default)) return(default)
   .s2_require(length(values) > 0L, "sequence", "nonempty sequence required")

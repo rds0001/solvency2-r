@@ -365,11 +365,11 @@ for (.tmp4 in .s2_iter(.s2_method(`contracts`, "items"))) {
 .tmp8 <- .tmp4; `identifier` <- .s2_at(.tmp8, 0); `row` <- .s2_at(.tmp8, 1)
 .s2_keys(`row`, `fields`, `identifier`)
 .tmp7 <- local({ .tmp5 <- list(); for (.tmp6 in .s2_iter(`fields`)) { `key` <- .tmp6; .tmp5[length(.tmp5) + 1L] <- list(.s2_number(.s2_at(`row`, `key`), .s2_add(.s2_add(`identifier`, "."), `key`))) }; .tmp5 }); `current` <- .s2_at(.tmp7, 0); `future` <- .s2_at(.tmp7, 1); `best_estimate` <- .s2_at(.tmp7, 2)
-`difference` <- .s2_number(.s2_sum(c(list(`current`), list(`future`), list(-(`best_estimate`)))), .s2_add(`identifier`, ".difference"))
+`difference` <- .s2_number(.s2_fsum(c(list(`current`), list(`future`), list(-(`best_estimate`)))), .s2_add(`identifier`, ".difference"))
 `differences` <- .s2_put(`differences`, `identifier`, `difference`)
 `amounts` <- .s2_put(`amounts`, `identifier`, .s2_max(0, `difference`))
 }
-return(c(list(.s2_sum(.s2_method(`amounts`, "values"))), list(.s2_merge(.s2_dict(list("contract_differences"), list(`differences`)), .s2_dict(list("contract_capital_at_risk"), list(`amounts`)), .s2_dict(list("empty_population"), list(!.s2_truth(.s2_truth(`contracts`)))), .s2_dict(list("qualification_reference"), list(`qualification_reference`)), .s2_dict(list("qualification_status"), list("EXTERNAL_UNVERIFIED")), .s2_dict(list("scope"), list("mcr_capital_at_risk_only_not_benefit_valuation_or_coverage_classification"))))))
+return(c(list(.s2_fsum(.s2_method(`amounts`, "values"))), list(.s2_merge(.s2_dict(list("contract_differences"), list(`differences`)), .s2_dict(list("contract_capital_at_risk"), list(`amounts`)), .s2_dict(list("empty_population"), list(!.s2_truth(.s2_truth(`contracts`)))), .s2_dict(list("qualification_reference"), list(`qualification_reference`)), .s2_dict(list("qualification_status"), list("EXTERNAL_UNVERIFIED")), .s2_dict(list("scope"), list("mcr_capital_at_risk_only_not_benefit_valuation_or_coverage_classification"))))))
 }
 
 # Source: capital.py:79
@@ -377,7 +377,7 @@ return(c(list(.s2_sum(.s2_method(`amounts`, "values"))), list(.s2_merge(.s2_dict
 `gross` <- .s2_number(`bscr`, "bscr", 0)
 `op` <- .s2_number(`operational`, "operational", 0)
 `tp` <- .s2_number(`adjustment_tp`, "adjustment_tp", -(`gross`), 0)
-return(c(list(.s2_sum(c(list(`gross`), list(`op`), list(`tp`)))), list(.s2_merge(.s2_dict(list("bscr"), list(`gross`)), .s2_dict(list("operational"), list(`op`)), .s2_dict(list("adjustment_tp"), list(`tp`))))))
+return(c(list(.s2_fsum(c(list(`gross`), list(`op`), list(`tp`)))), list(.s2_merge(.s2_dict(list("bscr"), list(`gross`)), .s2_dict(list("operational"), list(`op`)), .s2_dict(list("adjustment_tp"), list(`tp`))))))
 }
 
 # Source: capital.py:119
@@ -457,7 +457,7 @@ if (.s2_truth(.s2_and((.s2_equal(`undertaking_type`, "mixed")), !.s2_truth(`thir
 `minor_nonlife` <- (.s2_compare(.s2_divide(.s2_at(`premiums`, "nonlife_1_2"), `total`), `threshold`, "<="))
 `life_floor` <- .s2_number(.s2_scalar("mcr_amcr_life", `context`), "life_floor", 0)
 `nonlife_floor` <- .s2_number(.s2_scalar("mcr_amcr_nonlife_standard", `context`), "nonlife_floor", 0)
-return(c(list((if (.s2_truth(`minor_nonlife`)) `life_floor` else .s2_sum(c(list(`life_floor`), list(`nonlife_floor`))))), list(.s2_merge(.s2_dict(list("mixed_art_253"), list((if (.s2_truth(`minor_nonlife`)) "PARAGRAPH2" else "PARAGRAPH1"))), .s2_dict(list("premiums"), list(`premiums`)), .s2_dict(list("minor_premium_fraction"), list(`threshold`)), .s2_dict(list("life_floor"), list(`life_floor`)), .s2_dict(list("nonlife_floor"), list(`nonlife_floor`)), .s2_dict(list("qualification_reference"), list(`qualification_reference`)), .s2_dict(list("undertaking_classification"), list("EXTERNAL_INPUT_ONLY")), .s2_dict(list("legal_applicability_and_indexation"), list("PENDING")), .s2_dict(list("third_country_branch"), list(FALSE)), .s2_dict(list("paragraph3_source_issue_resolved"), list(FALSE)), .s2_dict(list("_sources"), list(c(list("DR:article-253:1-2"), list("DIR:article-73:2:a-b"))))))))
+return(c(list((if (.s2_truth(`minor_nonlife`)) `life_floor` else .s2_fsum(c(list(`life_floor`), list(`nonlife_floor`))))), list(.s2_merge(.s2_dict(list("mixed_art_253"), list((if (.s2_truth(`minor_nonlife`)) "PARAGRAPH2" else "PARAGRAPH1"))), .s2_dict(list("premiums"), list(`premiums`)), .s2_dict(list("minor_premium_fraction"), list(`threshold`)), .s2_dict(list("life_floor"), list(`life_floor`)), .s2_dict(list("nonlife_floor"), list(`nonlife_floor`)), .s2_dict(list("qualification_reference"), list(`qualification_reference`)), .s2_dict(list("undertaking_classification"), list("EXTERNAL_INPUT_ONLY")), .s2_dict(list("legal_applicability_and_indexation"), list("PENDING")), .s2_dict(list("third_country_branch"), list(FALSE)), .s2_dict(list("paragraph3_source_issue_resolved"), list(FALSE)), .s2_dict(list("_sources"), list(c(list("DR:article-253:1-2"), list("DIR:article-73:2:a-b"))))))))
 }
 .s2_native_require((is.null(`mixed_premiums`)), "mixed_premiums", "unused outside qualified mixed route")
 if (.s2_truth(`third_country_branch`)) {
@@ -497,7 +497,7 @@ return(.s2_native_capital___contract_capital_at_risk(`contracts`, `qualification
 `floor` <- .s2_number(.s2_scalar("mcr_notional_floor", `context`), "floor_fraction", 0, 1)
 `cap` <- .s2_number(.s2_scalar("mcr_notional_cap", `context`), "cap_fraction", 0, 1)
 .s2_native_require((.s2_compare(`floor`, `cap`, "<=")), "bounds", "floor fraction must not exceed cap fraction")
-`base` <- .s2_number(.s2_sum(c(list(`scr`), list(`addon`))), "scr_including_assigned_addon")
+`base` <- .s2_number(.s2_fsum(c(list(`scr`), list(`addon`))), "scr_including_assigned_addon")
 .tmp2 <- c(list(.s2_multiply(`floor`, `base`)), list(.s2_multiply(`cap`, `base`))); `lower` <- .s2_at(.tmp2, 0); `upper` <- .s2_at(.tmp2, 1)
 `combined` <- .s2_min(.s2_max(`linear`, `lower`), `upper`)
 return(c(list(.s2_max(`combined`, `absolute`)), list(.s2_merge(.s2_dict(list("linear"), list(`linear`)), .s2_dict(list("notional_scr"), list(`scr`)), .s2_dict(list("capital_addon"), list(`addon`)), .s2_dict(list("scr_including_assigned_addon"), list(`base`)), .s2_dict(list("floor_fraction"), list(`floor`)), .s2_dict(list("cap_fraction"), list(`cap`)), .s2_dict(list("lower_formula_term"), list(`lower`)), .s2_dict(list("upper_formula_term"), list(`upper`)), .s2_dict(list("combined_before_absolute_floor"), list(`combined`)), .s2_dict(list("absolute_floor"), list(`absolute`)), .s2_dict(list("signed_inputs"), list(.s2_or((.s2_compare(`linear`, 0, "<")), (.s2_compare(`scr`, 0, "<"))))), .s2_dict(list("qualification_reference"), list(`qualification_reference`)), .s2_dict(list("qualification_status"), list("EXTERNAL_UNVERIFIED")), .s2_dict(list("scope"), list("notional_activity_mcr_not_total_company_mcr")), .s2_dict(list("regulatory_total_released"), list(FALSE))))))
@@ -512,7 +512,7 @@ return(c(list(.s2_max(`combined`, `absolute`)), list(.s2_merge(.s2_dict(list("li
 `scr` <- .s2_number(`scr_excluding_addon`, "scr_excluding_addon", 0)
 `scale` <- .s2_max(abs(`nonlife`), abs(`life`))
 .s2_native_require((.s2_compare(`scale`, 0, ">")), "linear_denominator", "zero denominator requires external review", "REVIEW_REQUIRED")
-`denominator` <- .s2_sum(c(list(.s2_divide(`nonlife`, `scale`)), list(.s2_divide(`life`, `scale`))))
+`denominator` <- .s2_fsum(c(list(.s2_divide(`nonlife`, `scale`)), list(.s2_divide(`life`, `scale`))))
 .s2_native_require((!.s2_equal(`denominator`, 0)), "linear_denominator", "zero denominator requires external review", "REVIEW_REQUIRED")
 `selected` <- (if (.s2_truth((.s2_equal(`activity`, "nonlife")))) `nonlife` else `life`)
 `share` <- .s2_number(.s2_divide(.s2_divide(`selected`, `scale`), `denominator`), "allocation_ratio")
@@ -525,7 +525,7 @@ return(c(list(.s2_multiply(`share`, `scr`)), list(.s2_merge(.s2_dict(list("activ
 .s2_native_require(.s2_and(.s2_isinstance(`purpose`, c("str")), (.s2_contains(.s2_set(c(list("scr"), list("risk_margin"))), `purpose`))), "purpose", "scr or risk_margin view required")
 .tmp1 <- .s2_native_capital___pre_tax_stress(`bscr`, `operational`, `adjustment_tp`); `before_tax` <- .s2_at(.tmp1, 0); `components` <- .s2_at(.tmp1, 1)
 `tax` <- .s2_number(`adjustment_dt`, "adjustment_dt", `maximum` = 0)
-`total` <- .s2_sum(c(list(`before_tax`), list(`tax`)))
+`total` <- .s2_fsum(c(list(`before_tax`), list(`tax`)))
 .s2_native_require((.s2_compare(`total`, 0, ">=")), "scr", "negative total requires review of supplied components", "REVIEW_REQUIRED")
 .s2_native_require(.s2_or((is.null(`capital_addons`)), .s2_isinstance(`capital_addons`, c("Mapping"))), "capital_addons", "labelled imposed add-ons required")
 .tmp2 <- c(list(list()), list(.s2_merge())); `addons` <- .s2_at(.tmp2, 0); `audit` <- .s2_at(.tmp2, 1)
@@ -548,8 +548,8 @@ if (.s2_truth(`included`)) {
 }
 `audit` <- .s2_put(`audit`, `identifier`, .s2_merge(`row`, .s2_dict(list("included"), list(`included`)), .s2_dict(list("exclusion_reason"), list((if (.s2_truth(`included`)) NULL else "ARTICLE37_5_GOVERNANCE_RISK_MARGIN")))))
 }
-`addon_total` <- .s2_number(.s2_sum(`addons`), "capital_addon_total", 0)
-`value` <- .s2_number(.s2_sum(c(list(`total`), list(`addon_total`))), "scr_with_addons", 0)
+`addon_total` <- .s2_number(.s2_fsum(`addons`), "capital_addon_total", 0)
+`value` <- .s2_number(.s2_fsum(c(list(`total`), list(`addon_total`))), "scr_with_addons", 0)
 return(c(list(`value`), list(.s2_merge(`components`, .s2_dict(list("adjustment_dt"), list(`tax`)), .s2_dict(list("loss_before_tax_adjustment"), list(`before_tax`)), .s2_dict(list("combined_adjustment"), list(.s2_add(.s2_at(`components`, "adjustment_tp"), `tax`))), .s2_dict(list("scr_before_addons"), list(`total`)), .s2_dict(list("capital_addon_total"), list(`addon_total`)), .s2_dict(list("capital_addons"), list(`audit`)), .s2_dict(list("purpose"), list(`purpose`)), .s2_dict(list("scope"), list("component_composition_only")), .s2_dict(list("regulatory_total_released"), list(FALSE)), .s2_dict(list("_sources"), list((if (.s2_truth(`capital_addons`)) c(list("DIR:article-37:5")) else list())))))))
 }
 
@@ -646,7 +646,7 @@ return(c(list(`value`), list(.s2_merge(`details`, .s2_dict(list("plan_kind"), li
 `summed` <- .s2_number(.s2_scalar("captive_nonlife_sum_weight", `context`), "captive_nonlife_sum_weight", 0)
 `scale` <- .s2_max(.s2_method(`charges`, "values"))
 `normal` <- (if (.s2_truth(`scale`)) local({ .tmp5 <- list(); for (.tmp6 in .s2_iter(.s2_method(`charges`, "values"))) { `v` <- .tmp6; .tmp5[length(.tmp5) + 1L] <- list(.s2_divide(`v`, `scale`)) }; .tmp5 }) else .s2_multiply(c(list(0.0)), 12))
-`value` <- .s2_multiply(sqrt(.s2_add(.s2_multiply(`diagonal`, .s2_sum(local({ .tmp7 <- list(); for (.tmp8 in .s2_iter(`normal`)) { `v` <- .tmp8; .tmp7[length(.tmp7) + 1L] <- list(.s2_multiply(`v`, `v`)) }; .tmp7 }))), .s2_multiply(`summed`, .s2_power(.s2_sum(`normal`), 2)))), `scale`)
+`value` <- .s2_multiply(sqrt(.s2_add(.s2_multiply(`diagonal`, .s2_fsum(local({ .tmp7 <- list(); for (.tmp8 in .s2_iter(`normal`)) { `v` <- .tmp8; .tmp7[length(.tmp7) + 1L] <- list(.s2_multiply(`v`, `v`)) }; .tmp7 }))), .s2_multiply(`summed`, .s2_power(.s2_fsum(`normal`), 2)))), `scale`)
 .s2_native_require(is.finite(`value`), "aggregate_charge", "charge not representable", "REVIEW_REQUIRED")
 return(c(list(`value`), list(.s2_merge(.s2_dict(list("segment_charges"), list(`charges`)), .s2_dict(list("diagonal_weight"), list(`diagonal`)), .s2_dict(list("sum_weight"), list(`summed`)), .s2_dict(list("eligibility_reference"), list(`eligibility_reference`)), .s2_dict(list("qualification_status"), list("EXTERNAL_UNVERIFIED")), .s2_dict(list("scope"), list("DR90_nonlife_premium_reserve_only"))))))
 }
@@ -973,7 +973,7 @@ for (.tmp2 in .s2_iter(.s2_method(`exposures`, "items"))) {
 `factor` <- .s2_number(.s2_at(`row`, "risk_factor"), paste0(.s2_stringify(`label`), ".risk_factor"), 0, 1)
 if (.s2_truth((.s2_equal(`factor`, 0)))) { `removed` <- .s2_put((if (.s2_truth((.s2_equal(`factor`, 0)))) `removed` else `included`), `label`, `value`) } else { `included` <- .s2_put((if (.s2_truth((.s2_equal(`factor`, 0)))) `removed` else `included`), `label`, `value`) }
 }
-return(c(list(.s2_sum(.s2_method(`included`, "values"))), list(.s2_merge(.s2_dict(list("included"), list(`included`)), .s2_dict(list("zero_factor_removed"), list(`removed`)), .s2_dict(list("grouping_reference"), list(`grouping_reference`)), .s2_dict(list("grouping_status"), list("EXTERNAL_UNVERIFIED")), .s2_dict(list("scope"), list("Article184_3_Ei_only_Assets_and_quality_unchanged"))))))
+return(c(list(.s2_fsum(.s2_method(`included`, "values"))), list(.s2_merge(.s2_dict(list("included"), list(`included`)), .s2_dict(list("zero_factor_removed"), list(`removed`)), .s2_dict(list("grouping_reference"), list(`grouping_reference`)), .s2_dict(list("grouping_status"), list("EXTERNAL_UNVERIFIED")), .s2_dict(list("scope"), list("Article184_3_Ei_only_Assets_and_quality_unchanged"))))))
 }
 
 # Source: concentration.py:286
@@ -1023,7 +1023,7 @@ if (.s2_truth((.s2_equal(`category`, "captive_pooling")))) {
 if (.s2_truth(`omit`)) { `excluded` <- .s2_put((if (.s2_truth(`omit`)) `excluded` else `included`), `label`, `value`) } else { `included` <- .s2_put((if (.s2_truth(`omit`)) `excluded` else `included`), `label`, `value`) }
 `decisions` <- .s2_put(`decisions`, `label`, .s2_merge(.s2_dict(list("category"), list(`category`)), .s2_dict(list("excluded"), list(`omit`)), .s2_dict(list("conditions"), list((if (.s2_truth(`conditional`)) .s2_dict_from(.s2_at(`row`, "conditions")) else NULL)))))
 }
-return(c(list(.s2_sum(.s2_method(`included`, "values"))), list(.s2_merge(.s2_dict(list("included"), list(`included`)), .s2_dict(list("excluded"), list(`excluded`)), .s2_dict(list("decisions"), list(`decisions`)), .s2_dict(list("classification_reference"), list(`classification_reference`)), .s2_dict(list("classification_status"), list("EXTERNAL_UNVERIFIED")), .s2_dict(list("scope"), list("Article184_2_Assets_only_not_single_name_zero_factor_adjustment")), .s2_dict(list("_sources"), list((if (.s2_truth(.s2_any(local({ .tmp5 <- list(); for (.tmp6 in .s2_iter(.s2_method(`decisions`, "values"))) { `d` <- .tmp6; .tmp5[length(.tmp5) + 1L] <- list((.s2_equal(.s2_at(`d`, "category"), "captive_pooling"))) }; .tmp5 })))) c(list("DR:article-106:1")) else list())))))))
+return(c(list(.s2_fsum(.s2_method(`included`, "values"))), list(.s2_merge(.s2_dict(list("included"), list(`included`)), .s2_dict(list("excluded"), list(`excluded`)), .s2_dict(list("decisions"), list(`decisions`)), .s2_dict(list("classification_reference"), list(`classification_reference`)), .s2_dict(list("classification_status"), list("EXTERNAL_UNVERIFIED")), .s2_dict(list("scope"), list("Article184_2_Assets_only_not_single_name_zero_factor_adjustment")), .s2_dict(list("_sources"), list((if (.s2_truth(.s2_any(local({ .tmp5 <- list(); for (.tmp6 in .s2_iter(.s2_method(`decisions`, "values"))) { `d` <- .tmp6; .tmp5[length(.tmp5) + 1L] <- list((.s2_equal(.s2_at(`d`, "category"), "captive_pooling"))) }; .tmp5 })))) c(list("DR:article-106:1")) else list())))))))
 }
 
 # Source: concentration.py:92
@@ -1121,7 +1121,7 @@ return(c(list(.s2_max(0, .s2_subtract(`exposure`, `limit`))), list(.s2_merge(.s2
 
 .s2_native_concentration___reference(`grouping_reference`)
 `amounts` <- .s2_native_concentration___amounts(`exposures`, "exposures")
-return(c(list(.s2_sum(.s2_method(`amounts`, "values"))), list(.s2_merge(.s2_dict(list("exposures"), list(`amounts`)), .s2_dict(list("grouping_reference"), list(`grouping_reference`)), .s2_dict(list("grouping_status"), list("EXTERNAL_UNVERIFIED")), .s2_dict(list("scope"), list("externally_grouped_exposure_sum"))))))
+return(c(list(.s2_fsum(.s2_method(`amounts`, "values"))), list(.s2_merge(.s2_dict(list("exposures"), list(`amounts`)), .s2_dict(list("grouping_reference"), list(`grouping_reference`)), .s2_dict(list("grouping_status"), list("EXTERNAL_UNVERIFIED")), .s2_dict(list("scope"), list("externally_grouped_exposure_sum"))))))
 }
 
 # Source: concentration.py:197
@@ -1308,7 +1308,7 @@ if (.s2_truth(`included`)) {
 }
 `audit` <- .s2_put(`audit`, `label`, .s2_merge(.s2_dict(list("included"), list(`included`)), .s2_dict(list("selection_reason"), list(`reason`)), .s2_dict(list("recognition"), list(.s2_method(`recognition`, "to_dict"))), .s2_dict(list("derecognition"), list(.s2_method(`derecognition`, "to_dict"))), .s2_dict(list("article18_3"), list((if (.s2_truth((is.null(`exclusion`)))) NULL else .s2_method(`exclusion`, "to_dict")))), .s2_dict(list("boundary_assessment"), list(.s2_dict_from(`boundary`))), .s2_dict(list("unselected_projection"), list(.s2_method(`projected`, "to_dict"))), .s2_dict(list("selected_best_estimate"), list((if (.s2_truth(`included`)) .s2_at(`projected`, "value") else 0.0))), .s2_dict(list("assessment_reference"), list(`evidence`)), .s2_dict(list("qualification_status"), list("EXTERNAL_UNVERIFIED")), .s2_dict(list("reassessment"), list(`reassessment`)), .s2_dict(list("discernibility"), list(`discernibility`))))
 }
-return(c(list(.s2_sum(`selected`)), list(.s2_merge(.s2_dict(list("obligations"), list(`audit`)), .s2_dict(list("selected_obligation_ids"), list(local({ .tmp13 <- list(); for (.tmp14 in .s2_iter(.s2_method(`audit`, "items"))) { .tmp15 <- .tmp14; `k` <- .s2_at(.tmp15, 0); `v` <- .s2_at(.tmp15, 1); if (.s2_truth(.s2_at(`v`, "included"))) { .tmp13[length(.tmp13) + 1L] <- list(`k`) } }; .tmp13 }))), .s2_dict(list("excluded_obligation_ids"), list(local({ .tmp16 <- list(); for (.tmp17 in .s2_iter(.s2_method(`audit`, "items"))) { .tmp18 <- .tmp17; `k` <- .s2_at(.tmp18, 0); `v` <- .s2_at(.tmp18, 1); if (.s2_truth(!.s2_truth(.s2_at(`v`, "included")))) { .tmp16[length(.tmp16) + 1L] <- list(`k`) } }; .tmp16 }))), .s2_dict(list("payment_date_truncation_applied"), list(FALSE)), .s2_dict(list("cashflow_reference"), list(`cashflow_reference`)), .s2_dict(list("curve_reference"), list(`curve_reference`)), .s2_dict(list("qualification_status"), list("EXTERNAL_UNVERIFIED")), .s2_dict(list("scope"), list("qualified_obligation_scope_to_gross_best_estimate_not_complete_legal_boundary_assessment")), .s2_dict(list("_sources"), list(c(list("DR_EN:article-18:5:c"), .s2_iter(`assessment_sources`), .s2_iter((if (.s2_truth(.s2_any(local({ .tmp19 <- list(); for (.tmp20 in .s2_iter(.s2_method(`obligations`, "values"))) { `row` <- .tmp20; .tmp19[length(.tmp19) + 1L] <- list((.s2_contains(`row`, "reassessment"))) }; .tmp19 })))) c(list("CB_GUIDANCE:guideline-6C")) else list())))))))))
+return(c(list(.s2_fsum(`selected`)), list(.s2_merge(.s2_dict(list("obligations"), list(`audit`)), .s2_dict(list("selected_obligation_ids"), list(local({ .tmp13 <- list(); for (.tmp14 in .s2_iter(.s2_method(`audit`, "items"))) { .tmp15 <- .tmp14; `k` <- .s2_at(.tmp15, 0); `v` <- .s2_at(.tmp15, 1); if (.s2_truth(.s2_at(`v`, "included"))) { .tmp13[length(.tmp13) + 1L] <- list(`k`) } }; .tmp13 }))), .s2_dict(list("excluded_obligation_ids"), list(local({ .tmp16 <- list(); for (.tmp17 in .s2_iter(.s2_method(`audit`, "items"))) { .tmp18 <- .tmp17; `k` <- .s2_at(.tmp18, 0); `v` <- .s2_at(.tmp18, 1); if (.s2_truth(!.s2_truth(.s2_at(`v`, "included")))) { .tmp16[length(.tmp16) + 1L] <- list(`k`) } }; .tmp16 }))), .s2_dict(list("payment_date_truncation_applied"), list(FALSE)), .s2_dict(list("cashflow_reference"), list(`cashflow_reference`)), .s2_dict(list("curve_reference"), list(`curve_reference`)), .s2_dict(list("qualification_status"), list("EXTERNAL_UNVERIFIED")), .s2_dict(list("scope"), list("qualified_obligation_scope_to_gross_best_estimate_not_complete_legal_boundary_assessment")), .s2_dict(list("_sources"), list(c(list("DR_EN:article-18:5:c"), .s2_iter(`assessment_sources`), .s2_iter((if (.s2_truth(.s2_any(local({ .tmp19 <- list(); for (.tmp20 in .s2_iter(.s2_method(`obligations`, "values"))) { `row` <- .tmp20; .tmp19[length(.tmp19) + 1L] <- list((.s2_contains(`row`, "reassessment"))) }; .tmp19 })))) c(list("CB_GUIDANCE:guideline-6C")) else list())))))))))
 }
 
 # Source: contract_discernibility.py:9
@@ -1519,7 +1519,7 @@ if (.s2_truth(.s2_and(`selected`, `unselected`))) {
 .s2_native_require(.s2_or(!.s2_truth(`crosses_cutoff`), (.s2_compare(.s2_length(local({ .tmp17 <- list(); for (.tmp18 in .s2_iter(`boundary_ties`)) { `key` <- .tmp18; .tmp17[length(.tmp17) + 1L] <- list(.s2_at(.s2_at(`rows`, `key`), "gross_loss")) }; .s2_set(.tmp17) })), 1, "<="))), "selected_exposure_ids", "cutoff tie with different gross losses requires explicit choice", "REVIEW_REQUIRED")
 `selected` <- .s2_slice(`ranked`, NULL, `n`, NULL)
 }
-return(c(list(.s2_sum(local({ .tmp19 <- list(); for (.tmp20 in .s2_iter(`selected`)) { `key` <- .tmp20; .tmp19[length(.tmp19) + 1L] <- list(.s2_at(.s2_at(`rows`, `key`), "gross_loss")) }; .tmp19 }))), list(.s2_merge(.s2_dict(list("exposures"), list(`rows`)), .s2_dict(list("selected_ids"), list(.s2_sorted(`selected`))), .s2_dict(list("boundary_tie_ids"), list(`boundary_ties`)), .s2_dict(list("selected_net_loss"), list(.s2_sum(local({ .tmp21 <- list(); for (.tmp22 in .s2_iter(`selected`)) { `key` <- .tmp22; .tmp21[length(.tmp21) + 1L] <- list(.s2_at(.s2_at(`rows`, `key`), "net_loss")) }; .tmp21 })))), .s2_dict(list("explicit_selection"), list((!is.null(`selected_exposure_ids`)))), .s2_dict(list("default_fraction"), list(`fraction`)), .s2_dict(list("required_exposure_count"), list(.s2_int(`count`))), .s2_dict(list("available_exposure_count"), list(.s2_length(`rows`))), .s2_dict(list("qualification_reference"), list(`qualification_reference`)), .s2_dict(list("qualification_status"), list("EXTERNAL_UNVERIFIED")), .s2_dict(list("scope"), list("selected_gross_default_claims_not_bof_or_scr"))))))
+return(c(list(.s2_fsum(local({ .tmp19 <- list(); for (.tmp20 in .s2_iter(`selected`)) { `key` <- .tmp20; .tmp19[length(.tmp19) + 1L] <- list(.s2_at(.s2_at(`rows`, `key`), "gross_loss")) }; .tmp19 }))), list(.s2_merge(.s2_dict(list("exposures"), list(`rows`)), .s2_dict(list("selected_ids"), list(.s2_sorted(`selected`))), .s2_dict(list("boundary_tie_ids"), list(`boundary_ties`)), .s2_dict(list("selected_net_loss"), list(.s2_fsum(local({ .tmp21 <- list(); for (.tmp22 in .s2_iter(`selected`)) { `key` <- .tmp22; .tmp21[length(.tmp21) + 1L] <- list(.s2_at(.s2_at(`rows`, `key`), "net_loss")) }; .tmp21 })))), .s2_dict(list("explicit_selection"), list((!is.null(`selected_exposure_ids`)))), .s2_dict(list("default_fraction"), list(`fraction`)), .s2_dict(list("required_exposure_count"), list(.s2_int(`count`))), .s2_dict(list("available_exposure_count"), list(.s2_length(`rows`))), .s2_dict(list("qualification_reference"), list(`qualification_reference`)), .s2_dict(list("qualification_status"), list("EXTERNAL_UNVERIFIED")), .s2_dict(list("scope"), list("selected_gross_default_claims_not_bof_or_scr"))))))
 }
 
 # Source: credit_cat.py:69
@@ -1543,10 +1543,10 @@ for (.tmp4 in .s2_iter(.s2_method(`participations`, "items"))) {
 .s2_keys(`row`, c(list("nondeducted_bof_change"), list("deducted_bof_change")), `identifier`)
 `nondeducted` <- .s2_number(.s2_at(`row`, "nondeducted_bof_change"), .s2_add(`identifier`, ".nondeducted_bof_change"))
 `deducted` <- .s2_number(.s2_at(`row`, "deducted_bof_change"), .s2_add(`identifier`, ".deducted_bof_change"))
-`amounts` <- .s2_put(`amounts`, `identifier`, .s2_number(.s2_sum(c(list(`nondeducted`), list(.s2_max(`deducted`, 0)))), .s2_add(`identifier`, ".included_change")))
+`amounts` <- .s2_put(`amounts`, `identifier`, .s2_number(.s2_fsum(c(list(`nondeducted`), list(.s2_max(`deducted`, 0)))), .s2_add(`identifier`, ".included_change")))
 `excluded` <- .s2_put(`excluded`, `identifier`, .s2_min(`deducted`, 0))
 }
-return(c(list(.s2_sum(.s2_method(`amounts`, "values"))), list(.s2_merge(.s2_dict(list("included_bof_changes"), list(`amounts`)), .s2_dict(list("excluded_deducted_losses"), list(`excluded`)), .s2_dict(list("empty_population"), list(!.s2_truth(.s2_truth(`participations`)))), .s2_dict(list("qualification_reference"), list(`qualification_reference`)), .s2_dict(list("qualification_status"), list("EXTERNAL_UNVERIFIED"))))))
+return(c(list(.s2_fsum(.s2_method(`amounts`, "values"))), list(.s2_merge(.s2_dict(list("included_bof_changes"), list(`amounts`)), .s2_dict(list("excluded_deducted_losses"), list(`excluded`)), .s2_dict(list("empty_population"), list(!.s2_truth(.s2_truth(`participations`)))), .s2_dict(list("qualification_reference"), list(`qualification_reference`)), .s2_dict(list("qualification_status"), list("EXTERNAL_UNVERIFIED"))))))
 }
 
 # Source: default.py:8
@@ -1683,9 +1683,9 @@ for (.tmp1 in .s2_iter(.s2_method(`exposures`, "items"))) {
 }
 `scale` <- .s2_max(local({ .tmp3 <- list(); for (.tmp4 in .s2_iter(.s2_method(`values`, "values"))) { .tmp5 <- .tmp4; `_` <- .s2_at(.tmp5, 0); `lgd` <- .s2_at(.tmp5, 1); .tmp3[length(.tmp3) + 1L] <- list(`lgd`) }; .tmp3 }))
 .s2_native_require((.s2_compare(`scale`, 0, ">")), "lgd", "zero aggregate LGD has no defined weighted PD", "REVIEW_REQUIRED")
-`denominator` <- .s2_sum(local({ .tmp6 <- list(); for (.tmp7 in .s2_iter(.s2_method(`values`, "values"))) { .tmp8 <- .tmp7; `_` <- .s2_at(.tmp8, 0); `lgd` <- .s2_at(.tmp8, 1); .tmp6[length(.tmp6) + 1L] <- list(.s2_divide(`lgd`, `scale`)) }; .tmp6 }))
+`denominator` <- .s2_fsum(local({ .tmp6 <- list(); for (.tmp7 in .s2_iter(.s2_method(`values`, "values"))) { .tmp8 <- .tmp7; `_` <- .s2_at(.tmp8, 0); `lgd` <- .s2_at(.tmp8, 1); .tmp6[length(.tmp6) + 1L] <- list(.s2_divide(`lgd`, `scale`)) }; .tmp6 }))
 `weights` <- local({ .tmp9 <- .s2_object(); for (.tmp10 in .s2_iter(.s2_method(`values`, "items"))) { .tmp11 <- .tmp10; `label` <- .s2_at(.tmp11, 0); .tmp12 <- .s2_at(.tmp11, 1); `_` <- .s2_at(.tmp12, 0); `lgd` <- .s2_at(.tmp12, 1); .tmp9 <- .s2_put(.tmp9, `label`, .s2_divide(.s2_divide(`lgd`, `scale`), `denominator`)) }; .tmp9 })
-return(c(list(.s2_sum(local({ .tmp13 <- list(); for (.tmp14 in .s2_iter(.s2_method(`weights`, "items"))) { .tmp15 <- .tmp14; `label` <- .s2_at(.tmp15, 0); `weight` <- .s2_at(.tmp15, 1); .tmp13[length(.tmp13) + 1L] <- list(.s2_multiply(.s2_at(.s2_at(`values`, `label`), 0), `weight`)) }; .tmp13 }))), list(.s2_merge(.s2_dict(list("weights"), list(`weights`)), .s2_dict(list("lgd_scale"), list(`scale`)), .s2_dict(list("scaled_lgd_sum"), list(`denominator`)), .s2_dict(list("grouping_reference"), list(`grouping_reference`)), .s2_dict(list("grouping_status"), list("EXTERNAL_UNVERIFIED")), .s2_dict(list("scope"), list("single_name_weighted_pd_only_not_group_classification"))))))
+return(c(list(.s2_fsum(local({ .tmp13 <- list(); for (.tmp14 in .s2_iter(.s2_method(`weights`, "items"))) { .tmp15 <- .tmp14; `label` <- .s2_at(.tmp15, 0); `weight` <- .s2_at(.tmp15, 1); .tmp13[length(.tmp13) + 1L] <- list(.s2_multiply(.s2_at(.s2_at(`values`, `label`), 0), `weight`)) }; .tmp13 }))), list(.s2_merge(.s2_dict(list("weights"), list(`weights`)), .s2_dict(list("lgd_scale"), list(`scale`)), .s2_dict(list("scaled_lgd_sum"), list(`denominator`)), .s2_dict(list("grouping_reference"), list(`grouping_reference`)), .s2_dict(list("grouping_status"), list("EXTERNAL_UNVERIFIED")), .s2_dict(list("scope"), list("single_name_weighted_pd_only_not_group_classification"))))))
 }
 
 # Source: default.py:119
@@ -1729,7 +1729,7 @@ next
 `inter_terms` <- c(`inter_terms`, list(.s2_multiply(.s2_multiply(`term`, `lgd_p`), `lgd_q`)))
 }
 }
-.tmp8 <- c(list(.s2_sum(`inter_terms`)), list(.s2_sum(`intra_terms`))); `inter` <- .s2_at(.tmp8, 0); `intra` <- .s2_at(.tmp8, 1)
+.tmp8 <- c(list(.s2_fsum(`inter_terms`)), list(.s2_fsum(`intra_terms`))); `inter` <- .s2_at(.tmp8, 0); `intra` <- .s2_at(.tmp8, 1)
 `sigma` <- sqrt(.s2_add(`inter`, `intra`))
 if (.s2_truth((.s2_equal(`method`, "simplified_112b")))) {
 `boundary` <- .s2_number(.s2_scalar("simplified_default_sigma_limit", `context`), "sigma_limit", 0, 1)
@@ -1757,7 +1757,7 @@ return(c(list(.s2_add(.s2_multiply(.s2_scalar("default_overdue", `context`), `ov
 `keys` <- .s2_merge(.s2_dict(list("overdue_intermediary"), list("default_overdue")), .s2_dict(list("defaulted_forborne"), list("default_defaulted_forborne")), .s2_dict(list("other"), list("default_other")))
 `factors` <- local({ .tmp1 <- .s2_object(); for (.tmp2 in .s2_iter(.s2_method(`keys`, "items"))) { .tmp3 <- .tmp2; `name` <- .s2_at(.tmp3, 0); `key` <- .s2_at(.tmp3, 1); .tmp1 <- .s2_put(.tmp1, `name`, .s2_number(.s2_scalar(`key`, `context`), `key`, 0, 1)) }; .tmp1 })
 `charges` <- local({ .tmp4 <- .s2_object(); for (.tmp5 in .s2_iter(.s2_method(`pools`, "items"))) { .tmp6 <- .tmp5; `name` <- .s2_at(.tmp6, 0); `value` <- .s2_at(.tmp6, 1); .tmp4 <- .s2_put(.tmp4, `name`, .s2_multiply(`value`, .s2_at(`factors`, `name`))) }; .tmp4 })
-return(c(list(.s2_sum(.s2_method(`charges`, "values"))), list(.s2_merge(.s2_dict(list("pool_shocks"), list(`charges`)), .s2_dict(list("factors"), list(`factors`)), .s2_dict(list("qualification_reference"), list(`qualification_reference`)), .s2_dict(list("qualification_status"), list("EXTERNAL_UNVERIFIED")), .s2_dict(list("scope"), list("exposure_value_decrease_only")), .s2_dict(list("capital_charge_requires_revaluation"), list(TRUE))))))
+return(c(list(.s2_fsum(.s2_method(`charges`, "values"))), list(.s2_merge(.s2_dict(list("pool_shocks"), list(`charges`)), .s2_dict(list("factors"), list(`factors`)), .s2_dict(list("qualification_reference"), list(`qualification_reference`)), .s2_dict(list("qualification_status"), list("EXTERNAL_UNVERIFIED")), .s2_dict(list("scope"), list("exposure_value_decrease_only")), .s2_dict(list("capital_charge_requires_revaluation"), list(TRUE))))))
 }
 
 # Source: default_pools.py:10
@@ -2497,14 +2497,14 @@ for (.tmp4 in .s2_iter(.s2_method(`proportional_amounts`, "items"))) {
 `proportional` <- .s2_put(`proportional`, `key`, .s2_multiply(.s2_number(.s2_at(`row`, "amount"), .s2_add(`key`, ".amount"), 0), .s2_number(.s2_at(`row`, "share"), .s2_add(`key`, ".share"), 0, 1)))
 }
 `recalculate` <- .s2_native_evidence___declared_bool(`supervisory_recalculation_required`, "supervisory_recalculation_required")
-`original` <- .s2_number(.s2_sum(.s2_method(`full`, "values")), "full_sum", 0)
+`original` <- .s2_number(.s2_fsum(.s2_method(`full`, "values")), "full_sum", 0)
 if (.s2_truth(`recalculate`)) {
 `selected` <- .s2_number(`recalculated_full_amount`, "recalculated_full_amount", 0)
 } else {
 .s2_native_require((is.null(`recalculated_full_amount`)), "recalculated_full_amount", "unused recalculation input")
 `selected` <- `original`
 }
-`value` <- .s2_number(.s2_sum(c(list(`selected`), .s2_iter(.s2_method(`proportional`, "values")))), "group_limit", 0)
+`value` <- .s2_number(.s2_fsum(c(list(`selected`), .s2_iter(.s2_method(`proportional`, "values")))), "group_limit", 0)
 return(c(list(`value`), list(.s2_merge(.s2_dict(list("standalone_full_sum"), list(`original`)), .s2_dict(list("selected_full_amount"), list(`selected`)), .s2_dict(list("proportional_contributions"), list(`proportional`)), .s2_dict(list("supervisory_recalculation_required"), list(`recalculate`)), .s2_dict(list("qualification_reference"), list(`qualification_reference`)), .s2_dict(list("qualification_status"), list("EXTERNAL_UNVERIFIED")), .s2_dict(list("scope"), list("maximum_group_long_term_equity_amount_not_capital_or_classification"))))))
 }
 
@@ -2924,7 +2924,7 @@ for (.tmp1 in .s2_iter(.s2_method(`related`, "items"))) {
 .s2_keys(`row`, c(list(`value_key`), list("share")), `label`)
 `contributions` <- .s2_put(`contributions`, `label`, .s2_multiply(.s2_number(.s2_at(`row`, `value_key`), .s2_add(.s2_add(`label`, "."), `value_key`), `minimum`), .s2_number(.s2_at(`row`, "share"), .s2_add(`label`, ".share"), 0, 1)))
 }
-return(c(list(.s2_sum(c(list(`parent`), .s2_iter(.s2_method(`contributions`, "values"))))), list(`parent`), list(`contributions`)))
+return(c(list(.s2_fsum(c(list(`parent`), .s2_iter(.s2_method(`contributions`, "values"))))), list(`parent`), list(`contributions`)))
 }
 
 # Source: groups.py:137
@@ -2985,13 +2985,13 @@ for (.tmp1 in .s2_iter(.s2_method(`method2_related`, "items"))) {
 .tmp2 <- .s2_native_groups___shortfall(.s2_at(`row`, "eligible_own_funds"), .s2_at(`row`, "scr"), .s2_at(`row`, "share"), .s2_at(`row`, "is_subsidiary"), .s2_at(`row`, "proportionate_deficit_approved"), .s2_at(`row`, "approval_reference")); `required` <- .s2_at(.tmp2, 0); `detail` <- .s2_at(.tmp2, 1)
 `rows` <- .s2_put(`rows`, `label`, .s2_merge(`detail`, .s2_dict(list("required_shortfall"), list(`required`)), .s2_dict(list("weighted_own_funds"), list(.s2_multiply(.s2_at(`detail`, "share"), .s2_at(`detail`, "eligible_own_funds")))), .s2_dict(list("weighted_scr"), list(.s2_multiply(.s2_at(`detail`, "share"), .s2_at(`detail`, "scr"))))))
 }
-`method2_eof` <- .s2_sum(local({ .tmp4 <- list(); for (.tmp5 in .s2_iter(.s2_method(`rows`, "values"))) { `row` <- .tmp5; .tmp4[length(.tmp4) + 1L] <- list(.s2_at(`row`, "weighted_own_funds")) }; .tmp4 }))
-`method2_scr` <- .s2_sum(local({ .tmp6 <- list(); for (.tmp7 in .s2_iter(.s2_method(`rows`, "values"))) { `row` <- .tmp7; .tmp6[length(.tmp6) + 1L] <- list(.s2_at(`row`, "weighted_scr")) }; .tmp6 }))
-`deficit_rest` <- .s2_sum(local({ .tmp8 <- list(); for (.tmp9 in .s2_iter(.s2_method(`rows`, "values"))) { `row` <- .tmp9; .tmp8[length(.tmp8) + 1L] <- list(.s2_at(`row`, "additional_full_deficit")) }; .tmp8 }))
-`sector_eof` <- .s2_sum(local({ .tmp10 <- list(); for (.tmp11 in .s2_iter(.s2_method(`sectors`, "values"))) { `row` <- .tmp11; .tmp10[length(.tmp10) + 1L] <- list(.s2_at(`row`, "eligible_own_funds")) }; .tmp10 }))
-`sector_capital` <- .s2_sum(local({ .tmp12 <- list(); for (.tmp13 in .s2_iter(.s2_method(`sectors`, "values"))) { `row` <- .tmp13; .tmp12[length(.tmp12) + 1L] <- list(.s2_at(`row`, "capital_requirement")) }; .tmp12 }))
+`method2_eof` <- .s2_fsum(local({ .tmp4 <- list(); for (.tmp5 in .s2_iter(.s2_method(`rows`, "values"))) { `row` <- .tmp5; .tmp4[length(.tmp4) + 1L] <- list(.s2_at(`row`, "weighted_own_funds")) }; .tmp4 }))
+`method2_scr` <- .s2_fsum(local({ .tmp6 <- list(); for (.tmp7 in .s2_iter(.s2_method(`rows`, "values"))) { `row` <- .tmp7; .tmp6[length(.tmp6) + 1L] <- list(.s2_at(`row`, "weighted_scr")) }; .tmp6 }))
+`deficit_rest` <- .s2_fsum(local({ .tmp8 <- list(); for (.tmp9 in .s2_iter(.s2_method(`rows`, "values"))) { `row` <- .tmp9; .tmp8[length(.tmp8) + 1L] <- list(.s2_at(`row`, "additional_full_deficit")) }; .tmp8 }))
+`sector_eof` <- .s2_fsum(local({ .tmp10 <- list(); for (.tmp11 in .s2_iter(.s2_method(`sectors`, "values"))) { `row` <- .tmp11; .tmp10[length(.tmp10) + 1L] <- list(.s2_at(`row`, "eligible_own_funds")) }; .tmp10 }))
+`sector_capital` <- .s2_fsum(local({ .tmp12 <- list(); for (.tmp13 in .s2_iter(.s2_method(`sectors`, "values"))) { `row` <- .tmp13; .tmp12[length(.tmp12) + 1L] <- list(.s2_at(`row`, "capital_requirement")) }; .tmp12 }))
 `effective` <- .s2_max(`scr`, `floor`)
-`value` <- .s2_sum(c(list(`eof`), list(-(`effective`)), list(`method2_eof`), list(-(`method2_scr`)), list(-(`deficit_rest`)), list(`adjustment`), list(-(`addon`)), list(`sector_eof`), list(-(`sector_capital`))))
+`value` <- .s2_fsum(c(list(`eof`), list(-(`effective`)), list(`method2_eof`), list(-(`method2_scr`)), list(-(`deficit_rest`)), list(`adjustment`), list(-(`addon`)), list(`sector_eof`), list(-(`sector_capital`))))
 return(c(list(`value`), list(.s2_merge(.s2_dict(list("consolidated_own_funds"), list(`eof`)), .s2_dict(list("consolidated_scr"), list(`scr`)), .s2_dict(list("minimum"), list(`floor`)), .s2_dict(list("effective_consolidated_scr"), list(`effective`)), .s2_dict(list("method2_related"), list(`rows`)), .s2_dict(list("method2_own_funds"), list(`method2_eof`)), .s2_dict(list("method2_scr"), list(`method2_scr`)), .s2_dict(list("additional_full_deficit_deduction"), list(`deficit_rest`)), .s2_dict(list("method2_own_funds_adjustment"), list(`adjustment`)), .s2_dict(list("method2_capital_addon"), list(`addon`)), .s2_dict(list("sector_contributions"), list(`sectors`)), .s2_dict(list("sector_own_funds"), list(`sector_eof`)), .s2_dict(list("sector_capital_requirement"), list(`sector_capital`)), .s2_dict(list("approval_reference"), list(`approval_reference`)), .s2_dict(list("approval_status"), list("EXTERNAL_UNVERIFIED")), .s2_dict(list("qualification_reference"), list(`qualification_reference`)), .s2_dict(list("qualification_status"), list("EXTERNAL_UNVERIFIED")), .s2_dict(list("scope"), list("combined_method_arithmetic_not_consolidation_or_minimum_basic_funds_coverage")), .s2_dict(list("regulatory_total_released"), list(FALSE))))))
 }
 
@@ -3038,7 +3038,7 @@ for (.tmp3 in .s2_iter(.s2_method(`third_country`, "items"))) {
 } else {
 .s2_native_require((is.null(`third_country`)), "third_country", "local requirement mapping is only available in the future profile", "UNSUPPORTED_PARAMETER")
 }
-return(c(list(.s2_sum(c(list(`parent`), .s2_iter(.s2_method(`contributions`, "values")), .s2_iter(.s2_method(`local_contributions`, "values"))))), list(.s2_merge(.s2_dict(list("parent_mcr"), list(`parent`)), .s2_dict(list("related_contributions"), list(`contributions`)), .s2_dict(list("third_country_contributions"), list(`local_contributions`)), .s2_dict(list("qualification_reference"), list(`qualification_reference`)), .s2_dict(list("qualification_status"), list("EXTERNAL_UNVERIFIED")), .s2_dict(list("scope"), list("consolidated_group_minimum_only_not_basic_own_funds_eligibility"))))))
+return(c(list(.s2_fsum(c(list(`parent`), .s2_iter(.s2_method(`contributions`, "values")), .s2_iter(.s2_method(`local_contributions`, "values"))))), list(.s2_merge(.s2_dict(list("parent_mcr"), list(`parent`)), .s2_dict(list("related_contributions"), list(`contributions`)), .s2_dict(list("third_country_contributions"), list(`local_contributions`)), .s2_dict(list("qualification_reference"), list(`qualification_reference`)), .s2_dict(list("qualification_status"), list("EXTERNAL_UNVERIFIED")), .s2_dict(list("scope"), list("consolidated_group_minimum_only_not_basic_own_funds_eligibility"))))))
 }
 
 # Source: groups.py:257
@@ -3065,7 +3065,7 @@ if (.s2_truth(.s2_native_groups___future_rules(`context`))) {
 .s2_keys(`components`, `keys`, "components")
 `values` <- local({ .tmp4 <- .s2_object(); for (.tmp5 in .s2_iter(`keys`)) { `key` <- .tmp5; .tmp4 <- .s2_put(.tmp4, `key`, .s2_number(.s2_at(`components`, `key`), `key`, 0)) }; .tmp4 })
 `addon` <- .s2_number(`capital_addon`, "capital_addon", 0)
-return(c(list(.s2_sum(c(.s2_iter(.s2_method(`values`, "values")), .s2_iter(.s2_method(`additions`, "values")), list(`addon`)))), list(.s2_merge(.s2_dict(list("components"), list(`values`)), .s2_dict(list("capital_addon"), list(`addon`)), .s2_dict(list("simplified_contributions"), list(`additions`)), .s2_dict(list("_sources"), list((if (.s2_truth(.s2_native_groups___future_rules(`context`))) c(list("DR:article-336:a-d"), list("DR:article-336b")) else c(list("DR:article-336:a-e"))))), .s2_dict(list("qualification_reference"), list(`qualification_reference`)), .s2_dict(list("qualification_status"), list("EXTERNAL_UNVERIFIED")), .s2_dict(list("scope"), list("consolidated_SCR_composition_before_group_minimum_not_full_group_valuation")), .s2_dict(list("regulatory_total_released"), list(FALSE))))))
+return(c(list(.s2_fsum(c(.s2_iter(.s2_method(`values`, "values")), .s2_iter(.s2_method(`additions`, "values")), list(`addon`)))), list(.s2_merge(.s2_dict(list("components"), list(`values`)), .s2_dict(list("capital_addon"), list(`addon`)), .s2_dict(list("simplified_contributions"), list(`additions`)), .s2_dict(list("_sources"), list((if (.s2_truth(.s2_native_groups___future_rules(`context`))) c(list("DR:article-336:a-d"), list("DR:article-336b")) else c(list("DR:article-336:a-e"))))), .s2_dict(list("qualification_reference"), list(`qualification_reference`)), .s2_dict(list("qualification_status"), list("EXTERNAL_UNVERIFIED")), .s2_dict(list("scope"), list("consolidated_SCR_composition_before_group_minimum_not_full_group_valuation")), .s2_dict(list("regulatory_total_released"), list(FALSE))))))
 }
 
 # Source: groups.py:546
@@ -3077,9 +3077,9 @@ return(c(list(.s2_sum(c(.s2_iter(.s2_method(`values`, "values")), .s2_iter(.s2_m
 `floor` <- .s2_number(`minimum`, "minimum", 0)
 `effective` <- .s2_max(`scr`, `floor`)
 `sectors` <- .s2_native_groups___sector_contributions(`sector_contributions`, `context`)
-`sector_eof` <- .s2_sum(local({ .tmp1 <- list(); for (.tmp2 in .s2_iter(.s2_method(`sectors`, "values"))) { `row` <- .tmp2; .tmp1[length(.tmp1) + 1L] <- list(.s2_at(`row`, "eligible_own_funds")) }; .tmp1 }))
-`sector_capital` <- .s2_sum(local({ .tmp3 <- list(); for (.tmp4 in .s2_iter(.s2_method(`sectors`, "values"))) { `row` <- .tmp4; .tmp3[length(.tmp3) + 1L] <- list(.s2_at(`row`, "capital_requirement")) }; .tmp3 }))
-return(c(list(.s2_sum(c(list(`eof`), list(-(`effective`)), list(`sector_eof`), list(-(`sector_capital`))))), list(.s2_merge(.s2_dict(list("eligible_own_funds"), list(`eof`)), .s2_dict(list("calculated_scr"), list(`scr`)), .s2_dict(list("minimum"), list(`floor`)), .s2_dict(list("effective_scr"), list(`effective`)), .s2_dict(list("minimum_applied"), list((.s2_compare(`floor`, `scr`, ">")))), .s2_dict(list("sector_contributions"), list(`sectors`)), .s2_dict(list("sector_own_funds"), list(`sector_eof`)), .s2_dict(list("sector_capital_requirement"), list(`sector_capital`)), .s2_dict(list("qualification_reference"), list(`qualification_reference`)), .s2_dict(list("qualification_status"), list("EXTERNAL_UNVERIFIED")), .s2_dict(list("scope"), list("consolidated_arithmetic_only_not_consolidation_or_eligibility")), .s2_dict(list("regulatory_total_released"), list(FALSE))))))
+`sector_eof` <- .s2_fsum(local({ .tmp1 <- list(); for (.tmp2 in .s2_iter(.s2_method(`sectors`, "values"))) { `row` <- .tmp2; .tmp1[length(.tmp1) + 1L] <- list(.s2_at(`row`, "eligible_own_funds")) }; .tmp1 }))
+`sector_capital` <- .s2_fsum(local({ .tmp3 <- list(); for (.tmp4 in .s2_iter(.s2_method(`sectors`, "values"))) { `row` <- .tmp4; .tmp3[length(.tmp3) + 1L] <- list(.s2_at(`row`, "capital_requirement")) }; .tmp3 }))
+return(c(list(.s2_fsum(c(list(`eof`), list(-(`effective`)), list(`sector_eof`), list(-(`sector_capital`))))), list(.s2_merge(.s2_dict(list("eligible_own_funds"), list(`eof`)), .s2_dict(list("calculated_scr"), list(`scr`)), .s2_dict(list("minimum"), list(`floor`)), .s2_dict(list("effective_scr"), list(`effective`)), .s2_dict(list("minimum_applied"), list((.s2_compare(`floor`, `scr`, ">")))), .s2_dict(list("sector_contributions"), list(`sectors`)), .s2_dict(list("sector_own_funds"), list(`sector_eof`)), .s2_dict(list("sector_capital_requirement"), list(`sector_capital`)), .s2_dict(list("qualification_reference"), list(`qualification_reference`)), .s2_dict(list("qualification_status"), list("EXTERNAL_UNVERIFIED")), .s2_dict(list("scope"), list("consolidated_arithmetic_only_not_consolidation_or_eligibility")), .s2_dict(list("regulatory_total_released"), list(FALSE))))))
 }
 
 # Source: groups.py:10
@@ -3127,14 +3127,14 @@ for (.tmp1 in .s2_iter(.s2_method(`related`, "items"))) {
 `holding` <- .s2_number(.s2_at(`row`, "participation_value"), .s2_add(`label`, ".participation_value"), 0)
 `rows` <- .s2_put(`rows`, `label`, .s2_merge(`detail`, .s2_dict(list("participation_value"), list(`holding`)), .s2_dict(list("required_shortfall"), list(`required`)), .s2_dict(list("weighted_own_funds"), list(.s2_multiply(.s2_at(`detail`, "share"), .s2_at(`detail`, "eligible_own_funds")))), .s2_dict(list("weighted_scr"), list(.s2_multiply(.s2_at(`detail`, "share"), .s2_at(`detail`, "scr"))))))
 }
-`aggregate_eof` <- .s2_sum(c(list(`parent_eof`), .s2_iter(local({ .tmp4 <- list(); for (.tmp5 in .s2_iter(.s2_method(`rows`, "values"))) { `row` <- .tmp5; .tmp4[length(.tmp4) + 1L] <- list(.s2_at(`row`, "weighted_own_funds")) }; .tmp4 }))))
-`aggregate_scr` <- .s2_sum(c(list(`parent_requirement`), .s2_iter(local({ .tmp6 <- list(); for (.tmp7 in .s2_iter(.s2_method(`rows`, "values"))) { `row` <- .tmp7; .tmp6[length(.tmp6) + 1L] <- list(.s2_at(`row`, "weighted_scr")) }; .tmp6 }))))
-`holdings` <- .s2_sum(local({ .tmp8 <- list(); for (.tmp9 in .s2_iter(.s2_method(`rows`, "values"))) { `row` <- .tmp9; .tmp8[length(.tmp8) + 1L] <- list(.s2_at(`row`, "participation_value")) }; .tmp8 }))
-`deficit_rest` <- .s2_sum(local({ .tmp10 <- list(); for (.tmp11 in .s2_iter(.s2_method(`rows`, "values"))) { `row` <- .tmp11; .tmp10[length(.tmp10) + 1L] <- list(.s2_at(`row`, "additional_full_deficit")) }; .tmp10 }))
-`sector_eof` <- .s2_sum(local({ .tmp12 <- list(); for (.tmp13 in .s2_iter(.s2_method(`sectors`, "values"))) { `row` <- .tmp13; .tmp12[length(.tmp12) + 1L] <- list(.s2_at(`row`, "eligible_own_funds")) }; .tmp12 }))
-`sector_capital` <- .s2_sum(local({ .tmp14 <- list(); for (.tmp15 in .s2_iter(.s2_method(`sectors`, "values"))) { `row` <- .tmp15; .tmp14[length(.tmp14) + 1L] <- list(.s2_at(`row`, "capital_requirement")) }; .tmp14 }))
-`sector_holdings` <- .s2_sum(local({ .tmp16 <- list(); for (.tmp17 in .s2_iter(.s2_method(`sectors`, "values"))) { `row` <- .tmp17; .tmp16[length(.tmp16) + 1L] <- list(.s2_at(`row`, "participation_value")) }; .tmp16 }))
-`surplus` <- .s2_sum(c(list(`aggregate_eof`), list(-(`holdings`)), list(-(`aggregate_scr`)), list(`adjustment`), list(-(`addon`)), list(-(`deficit_rest`)), list(`sector_eof`), list(-(`sector_capital`)), list(-(`sector_holdings`))))
+`aggregate_eof` <- .s2_fsum(c(list(`parent_eof`), .s2_iter(local({ .tmp4 <- list(); for (.tmp5 in .s2_iter(.s2_method(`rows`, "values"))) { `row` <- .tmp5; .tmp4[length(.tmp4) + 1L] <- list(.s2_at(`row`, "weighted_own_funds")) }; .tmp4 }))))
+`aggregate_scr` <- .s2_fsum(c(list(`parent_requirement`), .s2_iter(local({ .tmp6 <- list(); for (.tmp7 in .s2_iter(.s2_method(`rows`, "values"))) { `row` <- .tmp7; .tmp6[length(.tmp6) + 1L] <- list(.s2_at(`row`, "weighted_scr")) }; .tmp6 }))))
+`holdings` <- .s2_fsum(local({ .tmp8 <- list(); for (.tmp9 in .s2_iter(.s2_method(`rows`, "values"))) { `row` <- .tmp9; .tmp8[length(.tmp8) + 1L] <- list(.s2_at(`row`, "participation_value")) }; .tmp8 }))
+`deficit_rest` <- .s2_fsum(local({ .tmp10 <- list(); for (.tmp11 in .s2_iter(.s2_method(`rows`, "values"))) { `row` <- .tmp11; .tmp10[length(.tmp10) + 1L] <- list(.s2_at(`row`, "additional_full_deficit")) }; .tmp10 }))
+`sector_eof` <- .s2_fsum(local({ .tmp12 <- list(); for (.tmp13 in .s2_iter(.s2_method(`sectors`, "values"))) { `row` <- .tmp13; .tmp12[length(.tmp12) + 1L] <- list(.s2_at(`row`, "eligible_own_funds")) }; .tmp12 }))
+`sector_capital` <- .s2_fsum(local({ .tmp14 <- list(); for (.tmp15 in .s2_iter(.s2_method(`sectors`, "values"))) { `row` <- .tmp15; .tmp14[length(.tmp14) + 1L] <- list(.s2_at(`row`, "capital_requirement")) }; .tmp14 }))
+`sector_holdings` <- .s2_fsum(local({ .tmp16 <- list(); for (.tmp17 in .s2_iter(.s2_method(`sectors`, "values"))) { `row` <- .tmp17; .tmp16[length(.tmp16) + 1L] <- list(.s2_at(`row`, "participation_value")) }; .tmp16 }))
+`surplus` <- .s2_fsum(c(list(`aggregate_eof`), list(-(`holdings`)), list(-(`aggregate_scr`)), list(`adjustment`), list(-(`addon`)), list(-(`deficit_rest`)), list(`sector_eof`), list(-(`sector_capital`)), list(-(`sector_holdings`))))
 return(c(list(`surplus`), list(.s2_merge(.s2_dict(list("related"), list(`rows`)), .s2_dict(list("aggregate_own_funds_before_adjustments"), list(`aggregate_eof`)), .s2_dict(list("aggregate_scr_before_addon"), list(`aggregate_scr`)), .s2_dict(list("participation_deduction"), list(`holdings`)), .s2_dict(list("additional_full_deficit_deduction"), list(`deficit_rest`)), .s2_dict(list("own_funds_adjustment"), list(`adjustment`)), .s2_dict(list("capital_addon"), list(`addon`)), .s2_dict(list("sector_contributions"), list(`sectors`)), .s2_dict(list("sector_own_funds"), list(`sector_eof`)), .s2_dict(list("sector_capital_requirement"), list(`sector_capital`)), .s2_dict(list("sector_participation_deduction"), list(`sector_holdings`)), .s2_dict(list("qualification_reference"), list(`qualification_reference`)), .s2_dict(list("qualification_status"), list("EXTERNAL_UNVERIFIED")), .s2_dict(list("scope"), list("method2_arithmetic_component_not_complete_group_solvency")), .s2_dict(list("regulatory_total_released"), list(FALSE))))))
 }
 
@@ -3171,12 +3171,12 @@ for (.tmp4 in .s2_iter(.s2_method(`transactions`, "items"))) {
 `adjusted` <- .s2_merge()
 for (.tmp7 in .s2_iter(.s2_method(`rows`, "items"))) {
 .tmp13 <- .tmp7; `key` <- .s2_at(.tmp13, 0); `row` <- .s2_at(.tmp13, 1)
-`removed` <- local({ .tmp8 <- .s2_object(); for (.tmp9 in .s2_iter(.s2_method(.s2_at(`removals`, `key`), "items"))) { .tmp10 <- .tmp9; `name` <- .s2_at(.tmp10, 0); `values` <- .s2_at(.tmp10, 1); .tmp8 <- .s2_put(.tmp8, `name`, .s2_sum(`values`)) }; .tmp8 })
-`adjusted` <- .s2_put(`adjusted`, `key`, .s2_merge(.s2_dict(list("share"), list(.s2_at(`row`, "share"))), local({ .tmp11 <- .s2_object(); for (.tmp12 in .s2_iter(`removed`)) { `name` <- .tmp12; .tmp11 <- .s2_put(.tmp11, `name`, .s2_number(.s2_sum(c(list(.s2_at(`row`, `name`)), list(-(.s2_at(`removed`, `name`))))), .s2_add(.s2_add(`key`, ".adjusted_"), `name`))) }; .tmp11 }), .s2_dict(list("removed"), list(`removed`))))
+`removed` <- local({ .tmp8 <- .s2_object(); for (.tmp9 in .s2_iter(.s2_method(.s2_at(`removals`, `key`), "items"))) { .tmp10 <- .tmp9; `name` <- .s2_at(.tmp10, 0); `values` <- .s2_at(.tmp10, 1); .tmp8 <- .s2_put(.tmp8, `name`, .s2_fsum(`values`)) }; .tmp8 })
+`adjusted` <- .s2_put(`adjusted`, `key`, .s2_merge(.s2_dict(list("share"), list(.s2_at(`row`, "share"))), local({ .tmp11 <- .s2_object(); for (.tmp12 in .s2_iter(`removed`)) { `name` <- .tmp12; .tmp11 <- .s2_put(.tmp11, `name`, .s2_number(.s2_fsum(c(list(.s2_at(`row`, `name`)), list(-(.s2_at(`removed`, `name`))))), .s2_add(.s2_add(`key`, ".adjusted_"), `name`))) }; .tmp11 }), .s2_dict(list("removed"), list(`removed`))))
 }
 `be` <- `group_consolidated_best_estimate`(.s2_at(.s2_at(`adjusted`, `parent_id`), "best_estimate"), local({ .tmp14 <- .s2_object(); for (.tmp15 in .s2_iter(.s2_method(`adjusted`, "items"))) { .tmp16 <- .tmp15; `key` <- .s2_at(.tmp16, 0); `row` <- .s2_at(.tmp16, 1); if (.s2_truth((!.s2_equal(`key`, `parent_id`)))) { .tmp14 <- .s2_put(.tmp14, `key`, .s2_merge(.s2_dict(list("best_estimate"), list(.s2_at(`row`, "best_estimate"))), .s2_dict(list("share"), list(.s2_at(`row`, "share"))))) } }; .tmp14 }), `qualification_reference` = `qualification_reference`, `context` = `context`)
-`recovery` <- .s2_sum(local({ .tmp17 <- list(); for (.tmp18 in .s2_iter(.s2_method(`adjusted`, "values"))) { `row` <- .tmp18; .tmp17[length(.tmp17) + 1L] <- list(.s2_multiply(.s2_at(`row`, "recoverables"), .s2_at(`row`, "share"))) }; .tmp17 }))
-`totals` <- .s2_merge(.s2_dict(list("best_estimate"), list(.s2_at(`be`, "value"))), .s2_dict(list("recoverables"), list(`recovery`)), .s2_dict(list("net_best_estimate"), list(.s2_sum(c(list(.s2_at(`be`, "value")), list(-(`recovery`)))))))
+`recovery` <- .s2_fsum(local({ .tmp17 <- list(); for (.tmp18 in .s2_iter(.s2_method(`adjusted`, "values"))) { `row` <- .tmp18; .tmp17[length(.tmp17) + 1L] <- list(.s2_multiply(.s2_at(`row`, "recoverables"), .s2_at(`row`, "share"))) }; .tmp17 }))
+`totals` <- .s2_merge(.s2_dict(list("best_estimate"), list(.s2_at(`be`, "value"))), .s2_dict(list("recoverables"), list(`recovery`)), .s2_dict(list("net_best_estimate"), list(.s2_fsum(c(list(.s2_at(`be`, "value")), list(-(`recovery`)))))))
 return(c(list(.s2_at(`totals`, `measure`)), list(.s2_merge(.s2_dict(list("measure"), list(`measure`)), .s2_dict(list("totals"), list(`totals`)), .s2_dict(list("entities_before"), list(`rows`)), .s2_dict(list("entities_after"), list(`adjusted`)), .s2_dict(list("transactions"), list(`ledger`)), .s2_dict(list("parent_id"), list(`parent_id`)), .s2_dict(list("qualification_reference"), list(`qualification_reference`)), .s2_dict(list("qualification_status"), list("EXTERNAL_UNVERIFIED")), .s2_dict(list("other_intragroup_adjustments_complete"), list(TRUE)), .s2_dict(list("cashflows_projected"), list(FALSE)), .s2_dict(list("scope"), list("qualified_internal_reinsurance_elimination_not_complete_group_solvency")), .s2_dict(list("_sources"), list(.s2_list(.s2_at(`be`, "sources"))))))))
 }
 
@@ -3215,7 +3215,7 @@ for (.tmp1 in .s2_iter(.s2_method(`entities`, "items"))) {
 `contributions` <- .s2_put(`contributions`, `label`, .s2_multiply(`amount`, `share`))
 }
 tryCatch({
-`value` <- .s2_sum(.s2_method(`contributions`, "values"))
+`value` <- .s2_fsum(.s2_method(`contributions`, "values"))
 }, s2_overflow = function(`.error`) {
 .s2_native_require(FALSE, "contributions", "sector total not representable", "REVIEW_REQUIRED")
 })
@@ -3251,7 +3251,7 @@ return(c(list(`value`), list(.s2_merge(.s2_dict(list("participation_risk"), list
 `values` <- local({ .tmp1 <- .s2_object(); for (.tmp2 in .s2_iter(.s2_method(`component_scrs`, "items"))) { .tmp3 <- .tmp2; `key` <- .s2_at(.tmp3, 0); `value` <- .s2_at(.tmp3, 1); .tmp1 <- .s2_put(.tmp1, `key`, .s2_number(`value`, .s2_add(`key`, ".scr"), 0)) }; .tmp1 })
 `scale` <- .s2_max(.s2_method(`values`, "values"))
 .s2_native_require((.s2_compare(`scale`, 0, ">")), "component_scrs", "zero denominator requires review", "REVIEW_REQUIRED")
-`scaled_sum` <- .s2_sum(local({ .tmp4 <- list(); for (.tmp5 in .s2_iter(.s2_method(`values`, "values"))) { `value` <- .tmp5; .tmp4[length(.tmp4) + 1L] <- list(.s2_divide(`value`, `scale`)) }; .tmp4 }))
+`scaled_sum` <- .s2_fsum(local({ .tmp4 <- list(); for (.tmp5 in .s2_iter(.s2_method(`values`, "values"))) { `value` <- .tmp5; .tmp4[length(.tmp4) + 1L] <- list(.s2_divide(`value`, `scale`)) }; .tmp4 }))
 `allocation_weight` <- .s2_divide(.s2_multiply(`fraction`, .s2_divide(.s2_at(`values`, `entity`), `scale`)), `scaled_sum`)
 `value` <- .s2_multiply(`allocation_weight`, `component`)
 `cap_details` <- .s2_merge()
@@ -3278,7 +3278,7 @@ return(local({ .tmp1 <- .s2_object(); for (.tmp2 in .s2_iter(.s2_method(`benefit
 `weights` <- .s2_native_health_accident___weights(`context`)
 .s2_keys(`values`, .s2_list(`weights`), "events")
 `exposures` <- local({ .tmp1 <- .s2_object(); for (.tmp2 in .s2_iter(`weights`)) { `key` <- .tmp2; .tmp1 <- .s2_put(.tmp1, `key`, .s2_number(.s2_at(`values`, `key`), `key`, 0)) }; .tmp1 })
-return(c(list(.s2_sum(local({ .tmp3 <- list(); for (.tmp4 in .s2_iter(`weights`)) { `key` <- .tmp4; .tmp3[length(.tmp3) + 1L] <- list(.s2_multiply(.s2_at(`weights`, `key`), .s2_at(`exposures`, `key`))) }; .tmp3 }))), list(`weights`), list(`exposures`)))
+return(c(list(.s2_fsum(local({ .tmp3 <- list(); for (.tmp4 in .s2_iter(`weights`)) { `key` <- .tmp4; .tmp3[length(.tmp3) + 1L] <- list(.s2_multiply(.s2_at(`weights`, `key`), .s2_at(`exposures`, `key`))) }; .tmp3 }))), list(`weights`), list(`exposures`)))
 }
 
 # Source: health_accident.py:33
@@ -3325,7 +3325,7 @@ return(c(list(`value`), list(.s2_merge(`grouping`, .s2_dict(list("valuation_refe
 .s2_native_require((is.null(`grouping_reference`)), "grouping_reference", "grouping reference unused without group counts")
 .s2_native_require(.s2_truth(`values`), "benefits", "empty event population has undefined average", "REVIEW_REQUIRED")
 `count` <- .s2_length(`values`)
-return(c(list(.s2_sum(local({ .tmp2 <- list(); for (.tmp3 in .s2_iter(.s2_method(`values`, "values"))) { `value` <- .tmp3; .tmp2[length(.tmp2) + 1L] <- list(.s2_divide(`value`, `count`)) }; .tmp2 }))), list(.s2_merge(.s2_dict(list("event_insured_persons"), list(`count`)), .s2_dict(list("valuation_reference"), list(`valuation_reference`)), .s2_dict(list("valuation_status"), list("EXTERNAL_UNVERIFIED")), .s2_dict(list("scope"), list("event_mean_benefit_only"))))))
+return(c(list(.s2_fsum(local({ .tmp2 <- list(); for (.tmp3 in .s2_iter(.s2_method(`values`, "values"))) { `value` <- .tmp3; .tmp2[length(.tmp2) + 1L] <- list(.s2_divide(`value`, `count`)) }; .tmp2 }))), list(.s2_merge(.s2_dict(list("event_insured_persons"), list(`count`)), .s2_dict(list("valuation_reference"), list(`valuation_reference`)), .s2_dict(list("valuation_status"), list("EXTERNAL_UNVERIFIED")), .s2_dict(list("scope"), list("event_mean_benefit_only"))))))
 }
 
 # Source: health_accident.py:57
@@ -3337,7 +3337,7 @@ if (.s2_truth((!is.null(`group_counts`)))) {
 return(c(list(`value`), list(.s2_merge(`grouping`, .s2_dict(list("benefits"), list(`values`)), .s2_dict(list("valuation_reference"), list(`valuation_reference`)), .s2_dict(list("valuation_status"), list("EXTERNAL_UNVERIFIED")), .s2_dict(list("scope"), list("grouped_event_exposure_sum_only"))))))
 }
 .s2_native_require((is.null(`grouping_reference`)), "grouping_reference", "grouping reference unused without group counts")
-return(c(list(.s2_sum(.s2_method(`values`, "values"))), list(.s2_merge(.s2_dict(list("benefits"), list(`values`)), .s2_dict(list("valuation_reference"), list(`valuation_reference`)), .s2_dict(list("valuation_status"), list("EXTERNAL_UNVERIFIED")), .s2_dict(list("scope"), list("event_exposure_sum_only"))))))
+return(c(list(.s2_fsum(.s2_method(`values`, "values"))), list(.s2_merge(.s2_dict(list("benefits"), list(`values`)), .s2_dict(list("valuation_reference"), list(`valuation_reference`)), .s2_dict(list("valuation_status"), list("EXTERNAL_UNVERIFIED")), .s2_dict(list("scope"), list("event_exposure_sum_only"))))))
 }
 
 # Source: health_accident.py:106
@@ -3489,7 +3489,7 @@ return(c(list(.s2_int((.s2_contains(`applicable`, `module`)))), list(.s2_merge(.
 .s2_native_health_pandemic___mapping(`benefits`, "benefits")
 .s2_native_health_pandemic___reference(`valuation_reference`, "valuation_reference")
 `values` <- local({ .tmp1 <- .s2_object(); for (.tmp2 in .s2_iter(.s2_method(`benefits`, "items"))) { .tmp3 <- .tmp2; `key` <- .s2_at(.tmp3, 0); `value` <- .s2_at(.tmp3, 1); .tmp1 <- .s2_put(.tmp1, `key`, .s2_number(`value`, `key`, 0)) }; .tmp1 })
-return(c(list(.s2_sum(.s2_method(`values`, "values"))), list(.s2_merge(.s2_dict(list("benefits"), list(`values`)), .s2_dict(list("valuation_reference"), list(`valuation_reference`)), .s2_dict(list("valuation_status"), list("EXTERNAL_UNVERIFIED")), .s2_dict(list("scope"), list("income_exposure_only_not_scr"))))))
+return(c(list(.s2_fsum(.s2_method(`values`, "values"))), list(.s2_merge(.s2_dict(list("benefits"), list(`values`)), .s2_dict(list("valuation_reference"), list(`valuation_reference`)), .s2_dict(list("valuation_status"), list("EXTERNAL_UNVERIFIED")), .s2_dict(list("scope"), list("income_exposure_only_not_scr"))))))
 }
 
 # Source: health_pandemic.py:47
@@ -3510,8 +3510,8 @@ for (.tmp1 in .s2_iter(.s2_method(`countries`, "items"))) {
 `income_factor` <- .s2_number(.s2_scalar("health_pandemic_income_factor", `context`), "health_pandemic_income_factor", 0, 1)
 `share` <- .s2_number(.s2_scalar("health_pandemic_symptomatic_share", `context`), "health_pandemic_symptomatic_share", 0, 1)
 `income_loss` <- .s2_multiply(`income_factor`, `income`)
-`medical_loss` <- .s2_multiply(`share`, .s2_sum(.s2_method(`totals`, "values")))
-return(c(list(.s2_sum(c(list(`income_loss`), list(`medical_loss`)))), list(.s2_merge(.s2_dict(list("income_loss"), list(`income_loss`)), .s2_dict(list("medical_loss"), list(`medical_loss`)), .s2_dict(list("country_medical_totals"), list(`totals`)), .s2_dict(list("income_factor"), list(`income_factor`)), .s2_dict(list("symptomatic_share"), list(`share`)), .s2_dict(list("exposure_reference"), list(`exposure_reference`)), .s2_dict(list("exposure_status"), list("EXTERNAL_UNVERIFIED")), .s2_dict(list("scope"), list("gross_scenario_claim_before_reinsurance_not_bof_or_scr"))))))
+`medical_loss` <- .s2_multiply(`share`, .s2_fsum(.s2_method(`totals`, "values")))
+return(c(list(.s2_fsum(c(list(`income_loss`), list(`medical_loss`)))), list(.s2_merge(.s2_dict(list("income_loss"), list(`income_loss`)), .s2_dict(list("medical_loss"), list(`medical_loss`)), .s2_dict(list("country_medical_totals"), list(`totals`)), .s2_dict(list("income_factor"), list(`income_factor`)), .s2_dict(list("symptomatic_share"), list(`share`)), .s2_dict(list("exposure_reference"), list(`exposure_reference`)), .s2_dict(list("exposure_status"), list("EXTERNAL_UNVERIFIED")), .s2_dict(list("scope"), list("gross_scenario_claim_before_reinsurance_not_bof_or_scr"))))))
 }
 
 # Source: health_pandemic.py:33
@@ -3522,7 +3522,7 @@ return(c(list(.s2_sum(c(list(`income_loss`), list(`medical_loss`)))), list(.s2_m
 .s2_keys(`costs`, .s2_list(`weights`), "costs")
 .s2_native_health_pandemic___reference(`valuation_reference`, "valuation_reference")
 `values` <- local({ .tmp4 <- .s2_object(); for (.tmp5 in .s2_iter(`weights`)) { `key` <- .tmp5; .tmp4 <- .s2_put(.tmp4, `key`, .s2_number(.s2_at(`costs`, `key`), `key`, 0)) }; .tmp4 })
-return(c(list(.s2_sum(local({ .tmp6 <- list(); for (.tmp7 in .s2_iter(`weights`)) { `key` <- .tmp7; .tmp6[length(.tmp6) + 1L] <- list(.s2_multiply(.s2_at(`weights`, `key`), .s2_at(`values`, `key`))) }; .tmp6 }))), list(.s2_merge(.s2_dict(list("costs"), list(`values`)), .s2_dict(list("weights"), list(`weights`)), .s2_dict(list("weight_sum"), list(.s2_sum(.s2_method(`weights`, "values")))), .s2_dict(list("valuation_reference"), list(`valuation_reference`)), .s2_dict(list("valuation_status"), list("EXTERNAL_UNVERIFIED")), .s2_dict(list("scope"), list("average_medical_cost_per_person_only_not_scr"))))))
+return(c(list(.s2_fsum(local({ .tmp6 <- list(); for (.tmp7 in .s2_iter(`weights`)) { `key` <- .tmp7; .tmp6[length(.tmp6) + 1L] <- list(.s2_multiply(.s2_at(`weights`, `key`), .s2_at(`values`, `key`))) }; .tmp6 }))), list(.s2_merge(.s2_dict(list("costs"), list(`values`)), .s2_dict(list("weights"), list(`weights`)), .s2_dict(list("weight_sum"), list(.s2_fsum(.s2_method(`weights`, "values")))), .s2_dict(list("valuation_reference"), list(`valuation_reference`)), .s2_dict(list("valuation_status"), list("EXTERNAL_UNVERIFIED")), .s2_dict(list("scope"), list("average_medical_cost_per_person_only_not_scr"))))))
 }
 
 # Source: indexation.py:10
@@ -3767,7 +3767,7 @@ for (.tmp2 in .s2_iter(.s2_method(`mapping`, "items"))) {
 }
 `validated` <- c(`validated`, list(`values`))
 }
-.tmp13 <- local({ .tmp7 <- list(); for (.tmp12 in .s2_iter(`validated`)) { `mapping` <- .tmp12; .tmp7[length(.tmp7) + 1L] <- list(local({ .tmp8 <- .s2_object(); for (.tmp11 in .s2_iter(c(list("up"), list("down")))) { `direction` <- .tmp11; .tmp8 <- .s2_put(.tmp8, `direction`, .s2_sum(local({ .tmp9 <- list(); for (.tmp10 in .s2_iter(.s2_method(`mapping`, "values"))) { `row` <- .tmp10; .tmp9[length(.tmp9) + 1L] <- list(.s2_at(`row`, `direction`)) }; .tmp9 }))) }; .tmp8 })) }; .tmp7 }); `gross` <- .s2_at(.tmp13, 0); `net` <- .s2_at(.tmp13, 1)
+.tmp13 <- local({ .tmp7 <- list(); for (.tmp12 in .s2_iter(`validated`)) { `mapping` <- .tmp12; .tmp7[length(.tmp7) + 1L] <- list(local({ .tmp8 <- .s2_object(); for (.tmp11 in .s2_iter(c(list("up"), list("down")))) { `direction` <- .tmp11; .tmp8 <- .s2_put(.tmp8, `direction`, .s2_fsum(local({ .tmp9 <- list(); for (.tmp10 in .s2_iter(.s2_method(`mapping`, "values"))) { `row` <- .tmp10; .tmp9[length(.tmp9) + 1L] <- list(.s2_at(`row`, `direction`)) }; .tmp9 }))) }; .tmp8 })) }; .tmp7 }); `gross` <- .s2_at(.tmp13, 0); `net` <- .s2_at(.tmp13, 1)
 `choice` <- (if (.s2_truth(.s2_and((is.null(`tie_break`)), .s2_and((.s2_equal(.s2_at(`gross`, "up"), .s2_at(`gross`, "down"))), (.s2_equal(.s2_at(`net`, "up"), .s2_at(`net`, "down"))))))) "up" else `tie_break`)
 .tmp14 <- .s2_native_aggregation___select_scenario(`gross`, `net`, `choice`); `charge` <- .s2_at(.tmp14, 0); `details` <- .s2_at(.tmp14, 1)
 `equals_up` <- (.s2_equal(`charge`, .s2_at(`gross`, "up")))
@@ -4016,8 +4016,8 @@ if (.s2_truth((.s2_contains(`values`, `excluded`)))) {
 `major` <- .s2_merge(.s2_dict(list("market"), list(.s2_multiply(.s2_number(.s2_at(`record`, "market"), "market", 0), .s2_subtract(1, `decline`)))), .s2_dict(list("default"), list(.s2_multiply(.s2_number(.s2_at(`record`, "default"), "default", 0), .s2_subtract(1, `decline`)))), .s2_dict(list("life"), list(.s2_at(`modules`, "life"))), .s2_dict(list("health"), list(`health`)), .s2_dict(list("nonlife"), list(.s2_at(`modules`, "nonlife"))))
 .tmp9 <- .s2_native_aggregation__quadratic(`major`, .s2_at(`matrices`, "bscr")); `aggregated` <- .s2_at(.tmp9, 0); `_` <- .s2_at(.tmp9, 1)
 .s2_keys(.s2_at(`record`, "other_module_charges"), c(list("operational"), list("intangible")), "other_module_charges")
-`other` <- .s2_sum(local({ .tmp10 <- list(); for (.tmp11 in .s2_iter(.s2_method(.s2_at(`record`, "other_module_charges"), "items"))) { .tmp12 <- .tmp11; `k` <- .s2_at(.tmp12, 0); `v` <- .s2_at(.tmp12, 1); .tmp10[length(.tmp10) + 1L] <- list(.s2_number(`v`, `k`, 0)) }; .tmp10 }))
-`deductions` <- .s2_sum(local({ .tmp13 <- list(); for (.tmp14 in .s2_iter(c(list("loss_absorption_tp"), list("loss_absorption_dt")))) { `k` <- .tmp14; .tmp13[length(.tmp13) + 1L] <- list(.s2_number(.s2_at(`record`, `k`), `k`, 0)) }; .tmp13 }))
+`other` <- .s2_fsum(local({ .tmp10 <- list(); for (.tmp11 in .s2_iter(.s2_method(.s2_at(`record`, "other_module_charges"), "items"))) { .tmp12 <- .tmp11; `k` <- .s2_at(.tmp12, 0); `v` <- .s2_at(.tmp12, 1); .tmp10[length(.tmp10) + 1L] <- list(.s2_number(`v`, `k`, 0)) }; .tmp10 }))
+`deductions` <- .s2_fsum(local({ .tmp13 <- list(); for (.tmp14 in .s2_iter(c(list("loss_absorption_tp"), list("loss_absorption_dt")))) { `k` <- .tmp14; .tmp13[length(.tmp13) + 1L] <- list(.s2_number(.s2_at(`record`, `k`), `k`, 0)) }; .tmp13 }))
 `additional` <- .s2_number(.s2_subtract(.s2_add(`aggregated`, `other`), `deductions`), "additional_stress_outflow")
 .s2_native_require((.s2_compare(`additional`, 0, ">=")), "loss_absorption", "deductions exceed qualified capital perimeter", "REVIEW_REQUIRED")
 return(c(list(`additional`), list(.s2_merge(.s2_dict(list("modules"), list(`major`)), .s2_dict(list("underwriting_after_exclusions"), list(`audit`)), .s2_dict(list("correlated_aggregate"), list(`aggregated`)), .s2_dict(list("other_module_charges"), list(`other`)), .s2_dict(list("loss_absorption_deductions"), list(`deductions`)), .s2_dict(list("additional_outflow"), list(`additional`))))))
@@ -4038,7 +4038,7 @@ if (.s2_truth((.s2_compare(.s2_length(`values`), `horizon`, "<")))) {
 .s2_native_require(`insurance`, "history", "asset income needs the complete historical average", "REVIEW_REQUIRED")
 `limit` <- .s2_at(`values`, -(1))
 } else {
-`limit` <- .s2_sum(local({ .tmp3 <- list(); for (.tmp4 in .s2_iter(`values`)) { `v` <- .tmp4; .tmp3[length(.tmp3) + 1L] <- list(.s2_divide(`v`, .s2_length(`values`))) }; .tmp3 }))
+`limit` <- .s2_fsum(local({ .tmp3 <- list(); for (.tmp4 in .s2_iter(`values`)) { `v` <- .tmp4; .tmp3[length(.tmp3) + 1L] <- list(.s2_divide(`v`, .s2_length(`values`))) }; .tmp3 }))
 }
 .s2_native_require((.s2_compare(`amount`, `limit`, "<=")), "amount", "projected income exceeds source historical limit", "REVIEW_REQUIRED")
 return(c(list(`amount`), list(`limit`)))
@@ -4056,7 +4056,7 @@ for (.tmp3 in .s2_iter(`historical`)) {
 .tmp4 <- .s2_native_long_term_equity_forced_sale___history_income(.s2_at(`values`, `key`), (!.s2_equal(`key`, "noncontractual_asset_income")), `context`); `amount` <- .s2_at(.tmp4, 0); `limits` <- .s2_put(`limits`, `key`, .s2_at(.tmp4, 1))
 `amounts` <- c(`amounts`, list(`amount`))
 }
-return(c(list(.s2_number(.s2_sum(`amounts`), "inflows", 0)), list(`limits`)))
+return(c(list(.s2_number(.s2_fsum(`amounts`), "inflows", 0)), list(`limits`)))
 }
 
 # Source: long_term_equity_forced_sale.py:72
@@ -4082,7 +4082,7 @@ for (.tmp6 in .s2_iter(`rows`)) {
 `segment_audit` <- .s2_put(`segment_audit`, `kind`, .s2_put(.s2_at(`segment_audit`, `kind`), `segment`, `total`))
 }
 }
-return(c(list(.s2_number(.s2_sum(`amounts`), "outflows", 0)), list(`segment_audit`)))
+return(c(list(.s2_number(.s2_fsum(`amounts`), "outflows", 0)), list(`segment_audit`)))
 }
 
 # Source: long_term_equity_forced_sale.py:111
@@ -4110,7 +4110,7 @@ for (.tmp7 in .s2_iter(c(list("baseline"), list("stressed")))) {
 `scenario` <- .tmp7
 .s2_keys(.s2_at(.s2_at(`inputs`, "cash_allocations"), `scenario`), `years`, .s2_add("cash_allocations.", `scenario`))
 `allocations` <- .s2_put(`allocations`, `scenario`, local({ .tmp8 <- .s2_object(); for (.tmp9 in .s2_iter(`years`)) { `year` <- .tmp9; .tmp8 <- .s2_put(.tmp8, `year`, .s2_number(.s2_at(.s2_at(.s2_at(`inputs`, "cash_allocations"), `scenario`), `year`), "cash_allocation", 0)) }; .tmp8 }))
-.s2_native_require((.s2_compare(.s2_sum(.s2_method(.s2_at(`allocations`, `scenario`), "values")), `initial_cash`, "<=")), "cash_allocations", "reference-date cash cannot be counted repeatedly within a scenario", "REVIEW_REQUIRED")
+.s2_native_require((.s2_compare(.s2_fsum(.s2_method(.s2_at(`allocations`, `scenario`), "values")), `initial_cash`, "<=")), "cash_allocations", "reference-date cash cannot be counted repeatedly within a scenario", "REVIEW_REQUIRED")
 }
 `funds` <- .s2_number(.s2_at(`inputs`, "other_fund_asset_value_eur"), "other_fund_asset_value_eur", 0)
 .s2_native_require((.s2_compare(`funds`, .s2_native_long_term_equity_future___parameter("forced_sale_fund_cap_eur", `context`), "<=")), "other_fund_asset_value_eur", "non-controlled fund assets exceed source cap", "REVIEW_REQUIRED")
@@ -4137,13 +4137,13 @@ if (.s2_truth((!is.null(`reinvestment`)))) {
 `income` <- .s2_number(.s2_multiply(`principal`, .s2_subtract(`factor`, 1)), "reinvestment_income")
 }
 `additional` <- (if (.s2_truth((.s2_equal(`scenario`, "stressed")))) .s2_at(.s2_at(`capital`, `year`), 0) else 0)
-`surplus` <- .s2_number(.s2_sum(c(list(.s2_at(.s2_at(`allocations`, `scenario`), `year`)), list(`incoming`), list(`income`), list(-(`outgoing`)), list(-(`additional`)))), "annual_surplus")
+`surplus` <- .s2_number(.s2_fsum(c(list(.s2_at(.s2_at(`allocations`, `scenario`), `year`)), list(`incoming`), list(`income`), list(-(`outgoing`)), list(-(`additional`)))), "annual_surplus")
 `annual` <- .s2_put(`annual`, `year`, .s2_merge(.s2_dict(list("inflows_without_initial_cash"), list(`incoming`)), .s2_dict(list("allocated_initial_cash"), list(.s2_at(.s2_at(`allocations`, `scenario`), `year`))), .s2_dict(list("reinvestment_income"), list(`income`)), .s2_dict(list("ordinary_outflows"), list(`outgoing`)), .s2_dict(list("additional_capital_outflow"), list(`additional`)), .s2_dict(list("surplus"), list(`surplus`)), .s2_dict(list("passes"), list((.s2_compare(`surplus`, 0, ">")))), .s2_dict(list("history_limits"), list(`history_limits`)), .s2_dict(list("segment_outflows"), list(`segment_audit`))))
 }
 `result` <- .s2_put(`result`, `scenario`, `annual`)
 }
 `passed` <- .s2_all(local({ .tmp16 <- list(); for (.tmp18 in .s2_iter(.s2_method(`result`, "values"))) { `scenario` <- .tmp18; for (.tmp17 in .s2_iter(.s2_method(`scenario`, "values"))) { `row` <- .tmp17; .tmp16[length(.tmp16) + 1L] <- list(.s2_at(`row`, "passes")) } }; .tmp16 }))
-return(c(list(`passed`), list(.s2_merge(.s2_dict(list("annual"), list(`result`)), .s2_dict(list("capital"), list(local({ .tmp19 <- .s2_object(); for (.tmp20 in .s2_iter(`years`)) { `year` <- .tmp20; .tmp19 <- .s2_put(.tmp19, `year`, .s2_at(.s2_at(`capital`, `year`), 1)) }; .tmp19 }))), .s2_dict(list("initial_cash_used"), list(local({ .tmp21 <- .s2_object(); for (.tmp22 in .s2_iter(.s2_method(`allocations`, "items"))) { .tmp23 <- .tmp22; `s` <- .s2_at(.tmp23, 0); `a` <- .s2_at(.tmp23, 1); .tmp21 <- .s2_put(.tmp21, `s`, .s2_sum(.s2_method(`a`, "values"))) }; .tmp21 }))), .s2_dict(list("automatic_surplus_carry_forward"), list(FALSE)), .s2_dict(list("projection_and_within_year_liquidity_verified"), list(FALSE)), .s2_dict(list("scope"), list("source_arithmetic_on_qualified_annual_projections_not_an_insurer_projection_model"))))))
+return(c(list(`passed`), list(.s2_merge(.s2_dict(list("annual"), list(`result`)), .s2_dict(list("capital"), list(local({ .tmp19 <- .s2_object(); for (.tmp20 in .s2_iter(`years`)) { `year` <- .tmp20; .tmp19 <- .s2_put(.tmp19, `year`, .s2_at(.s2_at(`capital`, `year`), 1)) }; .tmp19 }))), .s2_dict(list("initial_cash_used"), list(local({ .tmp21 <- .s2_object(); for (.tmp22 in .s2_iter(.s2_method(`allocations`, "items"))) { .tmp23 <- .tmp22; `s` <- .s2_at(.tmp23, 0); `a` <- .s2_at(.tmp23, 1); .tmp21 <- .s2_put(.tmp21, `s`, .s2_fsum(.s2_method(`a`, "values"))) }; .tmp21 }))), .s2_dict(list("automatic_surplus_carry_forward"), list(FALSE)), .s2_dict(list("projection_and_within_year_liquidity_verified"), list(FALSE)), .s2_dict(list("scope"), list("source_arithmetic_on_qualified_annual_projections_not_an_insurer_projection_model"))))))
 }
 
 # Source: long_term_equity_future.py:17
@@ -4168,7 +4168,7 @@ for (.tmp1 in .s2_iter(.s2_method(`groups`, "items"))) {
 `qualified` <- .s2_and((.s2_compare(`duration`, `duration_limit`, ">")), .s2_all(local({ .tmp4 <- list(); for (.tmp5 in .s2_iter(.s2_method(`risks`, "values"))) { `v` <- .tmp5; .tmp4[length(.tmp4) + 1L] <- list((.s2_compare(`v`, .s2_multiply(`risk_limit`, `best_estimate`), "<"))) }; .tmp4 })))
 `audit` <- .s2_put(`audit`, `identifier`, .s2_merge(.s2_dict(list("qualified"), list(`qualified`)), .s2_dict(list("article75_value"), list(`value`)), .s2_dict(list("risk_threshold"), list(.s2_multiply(`risk_limit`, `best_estimate`)))))
 }
-`illiquid` <- .s2_sum(local({ .tmp7 <- list(); for (.tmp8 in .s2_iter(.s2_method(`audit`, "values"))) { `row` <- .tmp8; if (.s2_truth(.s2_at(`row`, "qualified"))) { .tmp7[length(.tmp7) + 1L] <- list(.s2_at(`row`, "article75_value")) } }; .tmp7 }))
+`illiquid` <- .s2_fsum(local({ .tmp7 <- list(); for (.tmp8 in .s2_iter(.s2_method(`audit`, "values"))) { `row` <- .tmp8; if (.s2_truth(.s2_at(`row`, "qualified"))) { .tmp7[length(.tmp7) + 1L] <- list(.s2_at(`row`, "article75_value")) } }; .tmp7 }))
 `assets` <- .s2_number(.s2_at(`inputs`, "long_term_equity_value"), "long_term_equity_value", 0)
 `share` <- .s2_number(.s2_at(`inputs`, "long_term_equity_share"), "long_term_equity_share", 0, 1)
 `total_be` <- .s2_number(.s2_at(`inputs`, "total_life_best_estimate"), "total_life_best_estimate")
@@ -4197,10 +4197,10 @@ for (.tmp8 in .s2_iter(.s2_at(`table`, "rows"))) {
 `weighted` <- c(`weighted`, list(.s2_multiply(.s2_at(.s2_at(`assets`, `route`), .s2_at(`row`, 0)), .s2_subtract(1, `haircut`))))
 }
 }
-`total` <- .s2_sum(local({ .tmp10 <- list(); for (.tmp12 in .s2_iter(.s2_method(`assets`, "values"))) { `values` <- .tmp12; for (.tmp11 in .s2_iter(.s2_method(`values`, "values"))) { `v` <- .tmp11; .tmp10[length(.tmp10) + 1L] <- list(`v`) } }; .tmp10 }))
-`level2` <- .s2_sum(local({ .tmp13 <- list(); for (.tmp16 in .s2_iter(.s2_method(`assets`, "values"))) { `values` <- .tmp16; for (.tmp14 in .s2_iter(.s2_method(`values`, "items"))) { .tmp15 <- .tmp14; `key` <- .s2_at(.tmp15, 0); `v` <- .s2_at(.tmp15, 1); if (.s2_truth(.s2_method(`key`, "startswith", "level2"))) { .tmp13[length(.tmp13) + 1L] <- list(`v`) } } }; .tmp13 }))
-`level2b` <- .s2_sum(local({ .tmp17 <- list(); for (.tmp20 in .s2_iter(.s2_method(`assets`, "values"))) { `values` <- .tmp20; for (.tmp18 in .s2_iter(.s2_method(`values`, "items"))) { .tmp19 <- .tmp18; `key` <- .s2_at(.tmp19, 0); `v` <- .s2_at(.tmp19, 1); if (.s2_truth(.s2_method(`key`, "startswith", "level2b"))) { .tmp17[length(.tmp17) + 1L] <- list(`v`) } } }; .tmp17 }))
-`fund` <- .s2_sum(.s2_method(.s2_at(`assets`, "fund"), "values"))
+`total` <- .s2_fsum(local({ .tmp10 <- list(); for (.tmp12 in .s2_iter(.s2_method(`assets`, "values"))) { `values` <- .tmp12; for (.tmp11 in .s2_iter(.s2_method(`values`, "values"))) { `v` <- .tmp11; .tmp10[length(.tmp10) + 1L] <- list(`v`) } }; .tmp10 }))
+`level2` <- .s2_fsum(local({ .tmp13 <- list(); for (.tmp16 in .s2_iter(.s2_method(`assets`, "values"))) { `values` <- .tmp16; for (.tmp14 in .s2_iter(.s2_method(`values`, "items"))) { .tmp15 <- .tmp14; `key` <- .s2_at(.tmp15, 0); `v` <- .s2_at(.tmp15, 1); if (.s2_truth(.s2_method(`key`, "startswith", "level2"))) { .tmp13[length(.tmp13) + 1L] <- list(`v`) } } }; .tmp13 }))
+`level2b` <- .s2_fsum(local({ .tmp17 <- list(); for (.tmp20 in .s2_iter(.s2_method(`assets`, "values"))) { `values` <- .tmp20; for (.tmp18 in .s2_iter(.s2_method(`values`, "items"))) { .tmp19 <- .tmp18; `key` <- .s2_at(.tmp19, 0); `v` <- .s2_at(.tmp19, 1); if (.s2_truth(.s2_method(`key`, "startswith", "level2b"))) { .tmp17[length(.tmp17) + 1L] <- list(`v`) } } }; .tmp17 }))
+`fund` <- .s2_fsum(.s2_method(.s2_at(`assets`, "fund"), "values"))
 `caps_ok` <- .s2_and((.s2_compare(`level2`, .s2_multiply(.s2_native_long_term_equity_future___parameter("level2_cap", `context`), `total`), "<=")), (.s2_compare(`level2b`, .s2_multiply(.s2_native_long_term_equity_future___parameter("level2b_cap", `context`), `total`), "<=")))
 if (.s2_truth(`fund`)) {
 .s2_native_require((.s2_equal(.s2_at(`context`, "currency"), "EUR")), "currency", "fund cap requires externally converted EUR inputs", "UNSUPPORTED_CURRENCY")
@@ -4212,7 +4212,7 @@ if (.s2_truth(`fund`)) {
 `adjusted` <- .s2_add(.s2_multiply(`qualified`, .s2_subtract(1, .s2_native_long_term_equity_future___parameter("qualified_reinsurance_haircut", `context`))), .s2_multiply(`other`, .s2_subtract(1, .s2_native_long_term_equity_future___parameter("other_reinsurance_haircut", `context`))))
 `net` <- .s2_number(.s2_subtract(`gross`, `adjusted`), "adjusted_net_best_estimate")
 .s2_native_require((.s2_compare(`net`, 0, ">")), "adjusted_net_best_estimate", "nonpositive buffer denominator requires review", "REVIEW_REQUIRED")
-`liquid` <- .s2_number(.s2_sum(`weighted`), "haircut_liquid_assets", 0)
+`liquid` <- .s2_number(.s2_fsum(`weighted`), "haircut_liquid_assets", 0)
 `ratio` <- .s2_number(.s2_divide(`liquid`, `net`), "liquidity_buffer", 0)
 return(c(list(.s2_and(`caps_ok`, (.s2_compare(`ratio`, .s2_native_long_term_equity_future___parameter("liquidity_buffer", `context`), ">")))), list(.s2_merge(.s2_dict(list("pre_haircut_total"), list(`total`)), .s2_dict(list("pre_haircut_level2"), list(`level2`)), .s2_dict(list("pre_haircut_level2b"), list(`level2b`)), .s2_dict(list("pre_haircut_fund"), list(`fund`)), .s2_dict(list("composition_caps_met"), list(`caps_ok`)), .s2_dict(list("haircut_liquid_assets"), list(`liquid`)), .s2_dict(list("adjusted_net_best_estimate"), list(`net`)), .s2_dict(list("liquidity_buffer"), list(`ratio`)), .s2_dict(list("automatic_asset_trimming"), list(FALSE))))))
 }
@@ -4599,7 +4599,7 @@ for (.tmp1 in .s2_iter(.s2_method(`exposure_lgds`, "items"))) {
 .s2_native_require(.s2_and(.s2_isinstance(`label`, c("str")), .s2_truth(.s2_method(`label`, "strip"))), "exposure_lgds", "nonempty exposure ID required")
 `values` <- .s2_put(`values`, `label`, .s2_number(`value`, paste0(.s2_stringify(`label`), ".lgd"), 0))
 }
-return(c(list(.s2_sum(.s2_method(`values`, "values"))), list(.s2_merge(.s2_dict(list("exposure_lgds"), list(`values`)), .s2_dict(list("grouping_reference"), list(`grouping_reference`)), .s2_dict(list("grouping_status"), list("EXTERNAL_UNVERIFIED")), .s2_dict(list("scope"), list("single_name_sum_only_not_grouping_or_netting"))))))
+return(c(list(.s2_fsum(.s2_method(`values`, "values"))), list(.s2_merge(.s2_dict(list("exposure_lgds"), list(`values`)), .s2_dict(list("grouping_reference"), list(`grouping_reference`)), .s2_dict(list("grouping_status"), list("EXTERNAL_UNVERIFIED")), .s2_dict(list("scope"), list("single_name_sum_only_not_grouping_or_netting"))))))
 }
 
 # Source: macroregions.py:7
@@ -4670,7 +4670,7 @@ if (.s2_truth(.s2_and((.s2_equal(`peril`, "vessel")), (.s2_compare(.s2_number(.s
 `excluded` <- c(`excluded`, list(`label`))
 next
 }
-`totals` <- .s2_put(`totals`, `label`, .s2_sum(`values`))
+`totals` <- .s2_put(`totals`, `label`, .s2_fsum(`values`))
 }
 `value` <- .s2_max(.s2_method(`totals`, "values"), `default` = 0)
 return(c(list(`value`), list(.s2_merge(.s2_dict(list("peril"), list(`peril`)), .s2_dict(list("effective_object_sums"), list(`totals`)), .s2_dict(list("selected_ids"), list(.s2_sorted(local({ .tmp8 <- list(); for (.tmp9 in .s2_iter(`totals`)) { `key` <- .tmp9; if (.s2_truth((.s2_equal(.s2_at(`totals`, `key`), `value`)))) { .tmp8[length(.tmp8) + 1L] <- list(`key`) } }; .tmp8 })))), .s2_dict(list("below_threshold_ids"), list(`excluded`)), .s2_dict(list("minimum_vessel_value"), list(`threshold`)), .s2_dict(list("externally_qualified_fire_radius_metres"), list(`radius`)), .s2_dict(list("empty_population_convention"), list(!.s2_truth(.s2_truth(`totals`)))), .s2_dict(list("qualification_reference"), list(`qualification_reference`)), .s2_dict(list("qualification_status"), list("EXTERNAL_UNVERIFIED")), .s2_dict(list("scope"), list("effective_scenario_claim_not_bof_or_scr")), .s2_dict(list("_sources"), list(c(list(.s2_at(.s2_native_manmade_concentration__SOURCES, `peril`)))))))))
@@ -5006,7 +5006,7 @@ return(c(list(.s2_int(.s2_and(!.s2_truth(`failed`), .s2_and(`debt_pass`, `age_pa
 .s2_keys(`amounts`, `keys`, "amounts")
 `values` <- local({ .tmp1 <- .s2_object(); for (.tmp2 in .s2_iter(`keys`)) { `key` <- .tmp2; .tmp1 <- .s2_put(.tmp1, `key`, .s2_number(.s2_at(`amounts`, `key`), `key`, 0)) }; .tmp1 })
 `multiplier` <- (if (.s2_truth((.s2_equal(`basis`, "per_victim")))) .s2_number(.s2_scalar("motor_cat_victims", `context`), "victims", 0) else 1)
-return(c(list(.s2_multiply(.s2_sum(.s2_method(`values`, "values")), `multiplier`)), list(.s2_merge(.s2_dict(list("basis"), list(`basis`)), .s2_dict(list("amounts"), list(`values`)), .s2_dict(list("multiplier"), list(`multiplier`)), .s2_dict(list("qualification_reference"), list(`qualification_reference`)), .s2_dict(list("qualification_status"), list("EXTERNAL_UNVERIFIED")), .s2_dict(list("scope"), list("assumed_coverage_limit_only_not_claim_or_scr"))))))
+return(c(list(.s2_multiply(.s2_fsum(.s2_method(`values`, "values")), `multiplier`)), list(.s2_merge(.s2_dict(list("basis"), list(`basis`)), .s2_dict(list("amounts"), list(`values`)), .s2_dict(list("multiplier"), list(`multiplier`)), .s2_dict(list("qualification_reference"), list(`qualification_reference`)), .s2_dict(list("qualification_status"), list("EXTERNAL_UNVERIFIED")), .s2_dict(list("scope"), list("assumed_coverage_limit_only_not_claim_or_scr"))))))
 }
 
 # Source: motor_cat.py:60
@@ -5016,7 +5016,7 @@ return(c(list(.s2_multiply(.s2_sum(.s2_method(`values`, "values")), `multiplier`
 `high` <- .s2_number(`high_count`, "high_count", 0)
 `low` <- .s2_number(`low_count`, "low_count", 0)
 `params` <- local({ .tmp1 <- .s2_object(); for (.tmp2 in .s2_iter(c(list("floor"), list("multiplier"), list("low_weight"), list("capped_weight"), list("count_cap")))) { `key` <- .tmp2; .tmp1 <- .s2_put(.tmp1, `key`, .s2_number(.s2_scalar(.s2_add("motor_cat_", `key`), `context`), `key`, 0)) }; .tmp1 })
-`radicand` <- .s2_sum(c(list(`high`), list(.s2_multiply(.s2_at(`params`, "low_weight"), `low`)), list(.s2_multiply(.s2_at(`params`, "capped_weight"), .s2_min(`low`, .s2_at(`params`, "count_cap"))))))
+`radicand` <- .s2_fsum(c(list(`high`), list(.s2_multiply(.s2_at(`params`, "low_weight"), `low`)), list(.s2_multiply(.s2_at(`params`, "capped_weight"), .s2_min(`low`, .s2_at(`params`, "count_cap"))))))
 `unfloored` <- .s2_multiply(.s2_at(`params`, "multiplier"), sqrt(`radicand`))
 return(c(list(.s2_max(.s2_at(`params`, "floor"), `unfloored`)), list(.s2_merge(.s2_dict(list("high_count"), list(`high`)), .s2_dict(list("low_count"), list(`low`)), .s2_dict(list("parameters"), list(`params`)), .s2_dict(list("radicand"), list(`radicand`)), .s2_dict(list("unfloored_loss"), list(`unfloored`)), .s2_dict(list("qualification_reference"), list(`qualification_reference`)), .s2_dict(list("qualification_status"), list("EXTERNAL_UNVERIFIED")), .s2_dict(list("scope"), list("gross_scenario_claim_before_reinsurance_not_bof_or_scr"))))))
 }
@@ -5041,7 +5041,7 @@ if (.s2_truth((.s2_equal((.s2_compare(`limit`, `threshold`, ">")), (.s2_equal(`c
 `selected` <- .s2_put(`selected`, `key`, .s2_multiply(`count`, `share`))
 }
 }
-return(c(list(.s2_sum(.s2_method(`selected`, "values"))), list(.s2_merge(.s2_dict(list("category"), list(`category`)), .s2_dict(list("limit_threshold"), list(`threshold`)), .s2_dict(list("weighted_counts"), list(`selected`)), .s2_dict(list("qualification_reference"), list(`qualification_reference`)), .s2_dict(list("qualification_status"), list("EXTERNAL_UNVERIFIED")), .s2_dict(list("scope"), list("weighted_eligible_vehicle_count_only"))))))
+return(c(list(.s2_fsum(.s2_method(`selected`, "values"))), list(.s2_merge(.s2_dict(list("category"), list(`category`)), .s2_dict(list("limit_threshold"), list(`threshold`)), .s2_dict(list("weighted_counts"), list(`selected`)), .s2_dict(list("qualification_reference"), list(`qualification_reference`)), .s2_dict(list("qualification_status"), list("EXTERNAL_UNVERIFIED")), .s2_dict(list("scope"), list("weighted_eligible_vehicle_count_only"))))))
 }
 
 # Source: national_de.py:165
@@ -5110,7 +5110,7 @@ return(c(list((if (.s2_truth(`exempt`)) 0 else .s2_multiply(`amount`, `fraction`
 `keys` <- c(list("unearned_premiums"), list("mathematical_provision"), list("outstanding_claims_and_repurchases"), list("non_profit_related_refunds"), list("dormant_unused_premiums"), list("allocated_undistributed_profit_shares"), list("direct_policyholder_liabilities"), list("refundable_received_premiums"))
 .s2_keys(`components`, `keys`, "components")
 `values` <- local({ .tmp1 <- .s2_object(); for (.tmp2 in .s2_iter(`keys`)) { `key` <- .tmp2; .tmp1 <- .s2_put(.tmp1, `key`, .s2_number(.s2_at(`components`, `key`), `key`, 0)) }; .tmp1 })
-`minimum` <- .s2_number(.s2_sum(.s2_method(`values`, "values")), "minimum", 0)
+`minimum` <- .s2_number(.s2_fsum(.s2_method(`values`, "values")), "minimum", 0)
 `exempt` <- .s2_number(`foreign_security_exception`, "foreign_security_exception", 0)
 if (.s2_truth(`exempt`)) {
 .s2_native_evidence___reference(`foreign_security_reference`, "foreign_security_reference")
@@ -5166,7 +5166,7 @@ return(c(list(`value`), list(.s2_merge(.s2_dict(list("book_value"), list(`book`)
 .tmp2 <- c(list(.s2_number(`realisable_cash`, "realisable_cash", 0)), list(.s2_number(`total_investments`, "total_investments", 0))); `cash` <- .s2_at(.tmp2, 0); `assets` <- .s2_at(.tmp2, 1)
 .s2_native_require((.s2_compare(`outflows`, 0, ">")), "gross_outflows", "zero denominator requires separate review", "REVIEW_REQUIRED")
 .s2_native_require((.s2_compare(`cash`, `assets`, "<=")), "realisable_cash", "available investment cash must not exceed total investments")
-`sources` <- .s2_number(.s2_sum(c(list(`inflows`), list(`cash`))), "liquidity_sources", 0)
+`sources` <- .s2_number(.s2_fsum(c(list(`inflows`), list(`cash`))), "liquidity_sources", 0)
 return(c(list(.s2_divide(`sources`, `outflows`)), list(.s2_merge(.s2_dict(list("cashflow_gap"), list(.s2_subtract(`inflows`, `outflows`))), .s2_dict(list("liquidity_sources"), list(`sources`)), .s2_dict(list("liquidity_level"), list((if (.s2_truth(`assets`)) .s2_divide(`cash`, `assets`) else NULL))), .s2_dict(list("liquidity_level_status"), list((if (.s2_truth(`assets`)) "CALCULATED" else "UNDEFINED_ZERO_INVESTMENTS"))), .s2_dict(list("horizon_reference"), list(`horizon_reference`)), .s2_dict(list("source_version"), list(`source_version`)), .s2_dict(list("applicability_reference"), list(`applicability_reference`)), .s2_dict(list("national_applicability_verified"), list(FALSE)), .s2_dict(list("minimum_coverage_ratio_prescribed"), list(FALSE)), .s2_dict(list("projections_verified"), list(FALSE)), .s2_dict(list("scope"), list("qualified_horizon_liquidity_arithmetic_not_liquidity_model"))))))
 }
 
@@ -5206,7 +5206,7 @@ if (.s2_truth((.s2_contains(c(list("flood"), list("hail")), `peril`)))) {
 .s2_keys(`components`, `keys`, "components")
 `values` <- local({ .tmp1 <- .s2_object(); for (.tmp2 in .s2_iter(`keys`)) { `key` <- .tmp2; .tmp1 <- .s2_put(.tmp1, `key`, .s2_number(.s2_at(`components`, `key`), `key`, 0)) }; .tmp1 })
 `weight` <- (if (.s2_truth((.s2_contains(`keys`, "motor")))) .s2_number(.s2_scalar(.s2_add(.s2_add("natural_", `peril`), "_motor_weight"), `context`), "motor_weight", 0) else NULL)
-`total` <- .s2_sum(local({ .tmp3 <- list(); for (.tmp4 in .s2_iter(.s2_method(`values`, "items"))) { .tmp5 <- .tmp4; `key` <- .s2_at(.tmp5, 0); `value` <- .s2_at(.tmp5, 1); .tmp3[length(.tmp3) + 1L] <- list(.s2_multiply(`value`, (if (.s2_truth((.s2_equal(`key`, "motor")))) `weight` else 1))) }; .tmp3 }))
+`total` <- .s2_fsum(local({ .tmp3 <- list(); for (.tmp4 in .s2_iter(.s2_method(`values`, "items"))) { .tmp5 <- .tmp4; `key` <- .s2_at(.tmp5, 0); `value` <- .s2_at(.tmp5, 1); .tmp3[length(.tmp3) + 1L] <- list(.s2_multiply(`value`, (if (.s2_truth((.s2_equal(`key`, "motor")))) `weight` else 1))) }; .tmp3 }))
 `paragraph` <- .s2_method(.s2_merge(.s2_dict(list("earthquake"), list(4)), .s2_dict(list("subsidence"), list(2))), "get", `peril`, 7)
 if (.s2_truth((.s2_equal(`peril`, "subsidence")))) {
 `paragraph` <- .s2_method(.s2_method(.s2_effective("profile.json", `context`), "get", "methods", .s2_merge()), "get", "natural_subsidence_paragraph", 2)
@@ -5272,9 +5272,9 @@ return(c(list(`result`), list(.s2_merge(.s2_dict(list("peril"), list(`peril`)), 
 `scale` <- .s2_max(.s2_method(`premiums`, "values"))
 .s2_native_require((.s2_compare(`scale`, 0, ">")), "regional_premiums", "zero total gives undefined0/0 diversification", "REVIEW_REQUIRED")
 `scaled` <- local({ .tmp5 <- .s2_object(); for (.tmp6 in .s2_iter(.s2_method(`premiums`, "items"))) { .tmp7 <- .tmp6; `key` <- .s2_at(.tmp7, 0); `value` <- .s2_at(.tmp7, 1); .tmp5 <- .s2_put(.tmp5, `key`, .s2_divide(`value`, `scale`)) }; .tmp5 })
-`total` <- .s2_sum(.s2_method(`scaled`, "values"))
+`total` <- .s2_fsum(.s2_method(`scaled`, "values"))
 `shares` <- local({ .tmp8 <- .s2_object(); for (.tmp9 in .s2_iter(.s2_method(`scaled`, "items"))) { .tmp10 <- .tmp9; `key` <- .s2_at(.tmp10, 0); `value` <- .s2_at(.tmp10, 1); .tmp8 <- .s2_put(.tmp8, `key`, .s2_divide(`value`, `total`)) }; .tmp8 })
-`value` <- .s2_sum(local({ .tmp11 <- list(); for (.tmp12 in .s2_iter(.s2_method(`shares`, "values"))) { `share` <- .tmp12; .tmp11[length(.tmp11) + 1L] <- list(.s2_multiply(`share`, `share`)) }; .tmp11 }))
+`value` <- .s2_fsum(local({ .tmp11 <- list(); for (.tmp12 in .s2_iter(.s2_method(`shares`, "values"))) { `share` <- .tmp12; .tmp11[length(.tmp11) + 1L] <- list(.s2_multiply(`share`, `share`)) }; .tmp11 }))
 .tmp13 <- .s2_at(`articles`, `peril`); `article` <- .s2_at(.tmp13, 0); `paragraph` <- .s2_at(.tmp13, 1)
 `profile` <- .s2_effective("profile.json", `context`)
 return(c(list(`value`), list(.s2_merge(.s2_dict(list("peril"), list(`peril`)), .s2_dict(list("regional_shares"), list(`shares`)), .s2_dict(list("regions"), list(.s2_list(`labels`))), .s2_dict(list("qualification_reference"), list(`qualification_reference`)), .s2_dict(list("qualification_status"), list("EXTERNAL_UNVERIFIED")), .s2_dict(list("premium_basis_and_period_verified"), list(FALSE)), .s2_dict(list("geography_verified"), list(FALSE)), .s2_dict(list("reserve_volume_used"), list(FALSE)), .s2_dict(list("premium_reserve_exceptions_applied"), list(FALSE)), .s2_dict(list("default_factor_applied"), list(FALSE)), .s2_dict(list("scope"), list("premium_only_diversification_not_claim_or_scr")), .s2_dict(list("_sources"), list(c(list(paste0("DR:article-", .s2_stringify(`article`), ":", .s2_stringify(`paragraph`), ":a")), list(.s2_add(.s2_add(.s2_add(.s2_at(`context`, "profile_id"), ":"), .s2_at(.s2_at(.s2_at(`profile`, "sources"), "DR"), "sha256")), ":annex-III")))))))))
@@ -5320,7 +5320,7 @@ return(c(list(.s2_multiply(`factor`, `premium`)), list(.s2_merge(.s2_dict(list("
 .s2_keys(`group_premiums`, .s2_list(`factors`), "group_premiums")
 `premiums` <- local({ .tmp4 <- .s2_object(); for (.tmp5 in .s2_iter(`factors`)) { `key` <- .tmp5; .tmp4 <- .s2_put(.tmp4, `key`, .s2_number(.s2_at(`group_premiums`, `key`), .s2_add(`key`, ".premium"), 0)) }; .tmp4 })
 `weighted` <- local({ .tmp6 <- .s2_object(); for (.tmp7 in .s2_iter(`factors`)) { `key` <- .tmp7; .tmp6 <- .s2_put(.tmp6, `key`, .s2_number(.s2_multiply(.s2_at(`premiums`, `key`), .s2_at(`factors`, `key`)), .s2_add(`key`, ".weighted"), 0)) }; .tmp6 })
-`joint` <- .s2_sum(c(list(.s2_at(`weighted`, "1")), list(.s2_at(`weighted`, "2"))))
+`joint` <- .s2_fsum(c(list(.s2_at(`weighted`, "1")), list(.s2_at(`weighted`, "2"))))
 return(c(list(.s2_hypot(`joint`, .s2_at(`weighted`, "3"), .s2_at(`weighted`, "4"), .s2_at(`weighted`, "5"))), list(.s2_merge(.s2_dict(list("group_premiums"), list(`premiums`)), .s2_dict(list("factors"), list(`factors`)), .s2_dict(list("weighted_premiums"), list(`weighted`)), .s2_dict(list("joint_groups_1_2"), list(`joint`)), .s2_dict(list("classification_reference"), list(`classification_reference`)), .s2_dict(list("classification_status"), list("EXTERNAL_UNVERIFIED")), .s2_dict(list("scope"), list("gross_scenario_claim_before_reinsurance_not_bof_or_scr"))))))
 }
 
@@ -5381,7 +5381,7 @@ return(local({ .tmp1 <- list(); for (.tmp2 in .s2_iter(`references`)) { `referen
 `excess` <- .s2_number(`excess_assets_over_liabilities`, "excess_assets_over_liabilities")
 `subordinate` <- .s2_number(`subordinated_liabilities`, "subordinated_liabilities", 0)
 `shares` <- .s2_number(`own_shares`, "own_shares", 0)
-return(c(list(.s2_sum(c(list(`excess`), list(`subordinate`), list(-(`shares`))))), list(.s2_merge(.s2_dict(list("excess_assets_over_liabilities"), list(`excess`)), .s2_dict(list("subordinated_liabilities"), list(`subordinate`)), .s2_dict(list("own_shares"), list(`shares`)), .s2_dict(list("qualification_reference"), list(`qualification_reference`)), .s2_dict(list("qualification_status"), list("EXTERNAL_UNVERIFIED")), .s2_dict(list("scope"), list("basic_components_before_other_deductions_classification_and_eligibility")), .s2_dict(list("regulatory_total_released"), list(FALSE))))))
+return(c(list(.s2_fsum(c(list(`excess`), list(`subordinate`), list(-(`shares`))))), list(.s2_merge(.s2_dict(list("excess_assets_over_liabilities"), list(`excess`)), .s2_dict(list("subordinated_liabilities"), list(`subordinate`)), .s2_dict(list("own_shares"), list(`shares`)), .s2_dict(list("qualification_reference"), list(`qualification_reference`)), .s2_dict(list("qualification_status"), list("EXTERNAL_UNVERIFIED")), .s2_dict(list("scope"), list("basic_components_before_other_deductions_classification_and_eligibility")), .s2_dict(list("regulatory_total_released"), list(FALSE))))))
 }
 
 # Source: own_funds.py:10
@@ -5429,10 +5429,10 @@ return(c(list(`value`), list(.s2_merge(`details`, .s2_dict(list("proposed_tier")
 `charges` <- local({ .tmp3 <- .s2_object(); for (.tmp4 in .s2_iter(.s2_method(`deductions`, "items"))) { .tmp5 <- .tmp4; `key` <- .s2_at(.tmp5, 0); `value` <- .s2_at(.tmp5, 1); .tmp3 <- .s2_put(.tmp3, `key`, .s2_number(`value`, .s2_add("deductions.", `key`), 0)) }; .tmp3 })
 `tier2_used` <- .s2_min(.s2_at(`before`, "tier2"), .s2_at(`charges`, "tier2"))
 `tier2_excess` <- .s2_subtract(.s2_at(`charges`, "tier2"), `tier2_used`)
-`restricted_claim` <- .s2_sum(c(list(.s2_at(`charges`, "additional_tier1")), list(`tier2_excess`)))
+`restricted_claim` <- .s2_fsum(c(list(.s2_at(`charges`, "additional_tier1")), list(`tier2_excess`)))
 `restricted_used` <- .s2_min(.s2_at(`before`, "restricted_tier1"), `restricted_claim`)
 `restricted_excess` <- .s2_subtract(`restricted_claim`, `restricted_used`)
-`unrestricted_used` <- .s2_sum(c(list(.s2_at(`charges`, "cet1")), list(.s2_at(`charges`, "unclassified")), list(`restricted_excess`)))
+`unrestricted_used` <- .s2_fsum(c(list(.s2_at(`charges`, "cet1")), list(.s2_at(`charges`, "unclassified")), list(`restricted_excess`)))
 `after` <- .s2_merge(.s2_dict(list("unrestricted_tier1"), list(.s2_number(.s2_subtract(.s2_at(`before`, "unrestricted_tier1"), `unrestricted_used`), "remaining.unrestricted_tier1"))), .s2_dict(list("restricted_tier1"), list(.s2_subtract(.s2_at(`before`, "restricted_tier1"), `restricted_used`))), .s2_dict(list("tier2"), list(.s2_subtract(.s2_at(`before`, "tier2"), `tier2_used`))))
 `profile` <- .s2_effective("profile.json", `context`)
 `guidance` <- .s2_at(.s2_at(`profile`, "sources"), "RELATED_GUIDANCE")
@@ -5486,7 +5486,7 @@ return(c(list(.s2_int(`decision`)), list(.s2_merge(.s2_dict(list("facts"), list(
 `values` <- local({ .tmp3 <- .s2_object(); for (.tmp4 in .s2_iter(.s2_method(`participations`, "items"))) { .tmp5 <- .tmp4; `key` <- .s2_at(.tmp5, 0); `value` <- .s2_at(.tmp5, 1); .tmp3 <- .s2_put(.tmp3, `key`, .s2_number(`value`, .s2_add("participations.", `key`), 0)) }; .tmp3 })
 `full` <- local({ .tmp6 <- .s2_object(); for (.tmp7 in .s2_iter(.s2_method(`values`, "items"))) { .tmp8 <- .tmp7; `key` <- .s2_at(.tmp8, 0); `value` <- .s2_at(.tmp8, 1); if (.s2_truth((.s2_compare(`value`, `threshold`, ">")))) { .tmp6 <- .s2_put(.tmp6, `key`, `value`) } }; .tmp6 })
 `pool` <- local({ .tmp9 <- .s2_object(); for (.tmp10 in .s2_iter(.s2_method(`values`, "items"))) { .tmp11 <- .tmp10; `key` <- .s2_at(.tmp11, 0); `value` <- .s2_at(.tmp11, 1); if (.s2_truth((!.s2_contains(`full`, `key`)))) { .tmp9 <- .s2_put(.tmp9, `key`, `value`) } }; .tmp9 })
-`pool_value` <- .s2_number(.s2_sum(.s2_method(`pool`, "values")), "residual_pool_value", 0)
+`pool_value` <- .s2_number(.s2_fsum(.s2_method(`pool`, "values")), "residual_pool_value", 0)
 `pool_deduction` <- (if (.s2_truth((.s2_compare(`pool_value`, 0, ">")))) .s2_max(.s2_subtract(`pool_value`, `threshold`), 0) else 0)
 `factor` <- (if (.s2_truth((.s2_compare(`pool_value`, 0, ">")))) .s2_divide(`pool_deduction`, `pool_value`) else 0)
 `rows` <- .s2_merge()
@@ -5497,7 +5497,7 @@ for (.tmp12 in .s2_iter(.s2_method(`values`, "items"))) {
 }
 `profile` <- .s2_effective("profile.json", `context`)
 `guidance` <- .s2_at(.s2_at(`profile`, "sources"), "RELATED_GUIDANCE")
-return(c(list(.s2_sum(c(.s2_iter(.s2_method(`full`, "values")), list(`pool_deduction`)))), list(.s2_merge(.s2_dict(list("threshold_basis"), list(`basis`)), .s2_dict(list("basis_timing"), list("BEFORE_ARTICLE68_DEDUCTIONS")), .s2_dict(list("threshold_fraction"), list(`fraction`)), .s2_dict(list("threshold"), list(`threshold`)), .s2_dict(list("residual_pool_value"), list(`pool_value`)), .s2_dict(list("residual_pool_deduction"), list(`pool_deduction`)), .s2_dict(list("residual_pool_factor"), list(`factor`)), .s2_dict(list("participations"), list(`rows`)), .s2_dict(list("qualification_reference"), list(`qualification_reference`)), .s2_dict(list("qualification_status"), list("EXTERNAL_UNVERIFIED")), .s2_dict(list("guidance_document"), list(.s2_at(`guidance`, "document_id"))), .s2_dict(list("guidance_warning"), list(.s2_method(`guidance`, "get", "source_warning"))), .s2_dict(list("_sources"), list(c(list(.s2_add(.s2_add(.s2_add(.s2_at(`context`, "profile_id"), ":"), .s2_at(.s2_at(.s2_at(`profile`, "sources"), "DR"), "sha256")), ":article-68-1-2-4")), list(.s2_add(.s2_add(.s2_add(.s2_add(.s2_at(`context`, "profile_id"), ":"), .s2_at(`guidance`, "sha256")), ":"), .s2_at(`guidance`, "document_id")))))), .s2_dict(list("scope"), list("nonexempt_participation_deductions_not_ownership_exemption_or_tier_allocation"))))))
+return(c(list(.s2_fsum(c(.s2_iter(.s2_method(`full`, "values")), list(`pool_deduction`)))), list(.s2_merge(.s2_dict(list("threshold_basis"), list(`basis`)), .s2_dict(list("basis_timing"), list("BEFORE_ARTICLE68_DEDUCTIONS")), .s2_dict(list("threshold_fraction"), list(`fraction`)), .s2_dict(list("threshold"), list(`threshold`)), .s2_dict(list("residual_pool_value"), list(`pool_value`)), .s2_dict(list("residual_pool_deduction"), list(`pool_deduction`)), .s2_dict(list("residual_pool_factor"), list(`factor`)), .s2_dict(list("participations"), list(`rows`)), .s2_dict(list("qualification_reference"), list(`qualification_reference`)), .s2_dict(list("qualification_status"), list("EXTERNAL_UNVERIFIED")), .s2_dict(list("guidance_document"), list(.s2_at(`guidance`, "document_id"))), .s2_dict(list("guidance_warning"), list(.s2_method(`guidance`, "get", "source_warning"))), .s2_dict(list("_sources"), list(c(list(.s2_add(.s2_add(.s2_add(.s2_at(`context`, "profile_id"), ":"), .s2_at(.s2_at(.s2_at(`profile`, "sources"), "DR"), "sha256")), ":article-68-1-2-4")), list(.s2_add(.s2_add(.s2_add(.s2_add(.s2_at(`context`, "profile_id"), ":"), .s2_at(`guidance`, "sha256")), ":"), .s2_at(`guidance`, "document_id")))))), .s2_dict(list("scope"), list("nonexempt_participation_deductions_not_ownership_exemption_or_tier_allocation"))))))
 }
 
 # Source: own_funds.py:476
@@ -5509,7 +5509,7 @@ return(c(list(.s2_sum(c(.s2_iter(.s2_method(`full`, "values")), list(`pool_deduc
 .s2_native_own_funds___restricted_tier1(`t1`, `restricted`, `context`)
 .s2_native_require((.s2_compare(`t1`, .s2_multiply(.s2_scalar("own_funds_mcr_tier1_min", `context`), `mcr`), ">=")), "basic_tier1", "basic Tier 1 below 80% MCR", "INELIGIBLE_ALLOCATION")
 .s2_native_require((.s2_compare(`t2`, .s2_multiply(.s2_scalar("own_funds_mcr_tier2_max", `context`), `mcr`), "<=")), "basic_tier2", "basic Tier 2 exceeds 20% MCR", "INELIGIBLE_ALLOCATION")
-`total` <- .s2_sum(c(list(`t1`), list(`t2`)))
+`total` <- .s2_fsum(c(list(`t1`), list(`t2`)))
 .s2_native_require((.s2_compare(`total`, `mcr`, ">=")), "allocation", "proposed basic own funds do not cover the MCR", "INSUFFICIENT_COVERAGE")
 return(c(list(`total`), list(.s2_merge(.s2_dict(list("coverage_ratio"), list(.s2_divide(`total`, `mcr`))), .s2_dict(list("restricted_tier1"), list(`restricted`)), .s2_dict(list("_sources"), list(.s2_native_own_funds___version_sources(`context`, "DR:article-82", "DIR:article-98-4"))), .s2_dict(list("scope"), list("proposed_full_coverage_of_preclassified_basic_amounts_only")), .s2_dict(list("classification_and_transferability"), list("EXTERNAL_INPUT_ONLY"))))))
 }
@@ -5522,12 +5522,12 @@ return(c(list(`total`), list(.s2_merge(.s2_dict(list("coverage_ratio"), list(.s2
 `keys` <- c(list("own_shares"), list("foreseeable_distributions"), list("listed_basic_items"), list("approved_unlisted_items"), list("restricted_items"), list("financial_participation_deductions"), list("financial_participation_already_counted"))
 .s2_keys(`deductions`, `keys`, "deductions")
 `amounts` <- local({ .tmp1 <- .s2_object(); for (.tmp2 in .s2_iter(`keys`)) { `key` <- .tmp2; .tmp1 <- .s2_put(.tmp1, `key`, .s2_number(.s2_at(`deductions`, `key`), .s2_add("deductions.", `key`), 0)) }; .tmp1 })
-`first_five` <- .s2_sum(local({ .tmp3 <- list(); for (.tmp4 in .s2_iter(.s2_slice(`keys`, NULL, 5, NULL))) { `key` <- .tmp4; .tmp3[length(.tmp3) + 1L] <- list(.s2_at(`amounts`, `key`)) }; .tmp3 }))
+`first_five` <- .s2_fsum(local({ .tmp3 <- list(); for (.tmp4 in .s2_iter(.s2_slice(`keys`, NULL, 5, NULL))) { `key` <- .tmp4; .tmp3[length(.tmp3) + 1L] <- list(.s2_at(`amounts`, `key`)) }; .tmp3 }))
 `financial` <- .s2_at(`amounts`, "financial_participation_deductions")
 `overlap` <- .s2_at(`amounts`, "financial_participation_already_counted")
 .s2_native_require(.s2_and((.s2_compare(`overlap`, `financial`, "<=")), (.s2_compare(`overlap`, `first_five`, "<="))), "financial_participation_already_counted", "overlap cannot exceed financial deduction or other deductions")
 `residual` <- .s2_subtract(`financial`, `overlap`)
-return(c(list(.s2_sum(c(list(`excess`), list(-(`first_five`)), list(-(`residual`))))), list(.s2_merge(.s2_dict(list("_sources"), list(.s2_native_own_funds___version_sources(`context`, "DR:article-70"))), .s2_dict(list("excess_assets_over_liabilities"), list(`excess`)), .s2_dict(list("deductions"), list(`amounts`)), .s2_dict(list("deductions_a_to_e"), list(`first_five`)), .s2_dict(list("residual_financial_participation_deduction"), list(`residual`)), .s2_dict(list("qualification_reference"), list(`qualification_reference`)), .s2_dict(list("qualification_status"), list("EXTERNAL_UNVERIFIED")), .s2_dict(list("future_premium_profits"), list("ALREADY_INCLUDED_IN_EXCESS_NOT_ADDED_AGAIN")), .s2_dict(list("scope"), list("reconciliation_reserve_arithmetic_not_tier1_classification_or_eligibility"))))))
+return(c(list(.s2_fsum(c(list(`excess`), list(-(`first_five`)), list(-(`residual`))))), list(.s2_merge(.s2_dict(list("_sources"), list(.s2_native_own_funds___version_sources(`context`, "DR:article-70"))), .s2_dict(list("excess_assets_over_liabilities"), list(`excess`)), .s2_dict(list("deductions"), list(`amounts`)), .s2_dict(list("deductions_a_to_e"), list(`first_five`)), .s2_dict(list("residual_financial_participation_deduction"), list(`residual`)), .s2_dict(list("qualification_reference"), list(`qualification_reference`)), .s2_dict(list("qualification_status"), list("EXTERNAL_UNVERIFIED")), .s2_dict(list("future_premium_profits"), list("ALREADY_INCLUDED_IN_EXCESS_NOT_ADDED_AGAIN")), .s2_dict(list("scope"), list("reconciliation_reserve_arithmetic_not_tier1_classification_or_eligibility"))))))
 }
 
 # Source: own_funds.py:363
@@ -5560,8 +5560,8 @@ return(c(list(`deduction`), list(.s2_merge(.s2_dict(list("restricted_own_funds")
 .s2_native_own_funds___restricted_tier1(`t1`, `restricted`, `context`)
 .s2_native_require((.s2_compare(`t1`, .s2_multiply(.s2_scalar("own_funds_scr_tier1_min", `context`), `scr`), ">=")), "tier1", "Tier 1 below half the SCR", "INELIGIBLE_ALLOCATION")
 .s2_native_require((.s2_compare(`t3`, .s2_multiply(.s2_scalar("own_funds_scr_tier3_strict_max", `context`), `scr`), "<")), "tier3", "Tier 3 must be strictly below 15% SCR", "INELIGIBLE_ALLOCATION")
-.s2_native_require((.s2_compare(.s2_sum(c(list(`t2`), list(`t3`))), .s2_multiply(.s2_scalar("own_funds_scr_tier2_tier3_max", `context`), `scr`), "<=")), "tier2_tier3", "Tier 2 plus Tier 3 exceeds half the SCR", "INELIGIBLE_ALLOCATION")
-`total` <- .s2_sum(c(list(`t1`), list(`t2`), list(`t3`)))
+.s2_native_require((.s2_compare(.s2_fsum(c(list(`t2`), list(`t3`))), .s2_multiply(.s2_scalar("own_funds_scr_tier2_tier3_max", `context`), `scr`), "<=")), "tier2_tier3", "Tier 2 plus Tier 3 exceeds half the SCR", "INELIGIBLE_ALLOCATION")
+`total` <- .s2_fsum(c(list(`t1`), list(`t2`), list(`t3`)))
 .s2_native_require((.s2_compare(`total`, `scr`, ">=")), "allocation", "proposed own funds do not cover the SCR", "INSUFFICIENT_COVERAGE")
 return(c(list(`total`), list(.s2_merge(.s2_dict(list("coverage_ratio"), list(.s2_divide(`total`, `scr`))), .s2_dict(list("restricted_tier1"), list(`restricted`)), .s2_dict(list("_sources"), list(.s2_native_own_funds___version_sources(`context`, "DR:article-82", "DIR:article-98-3"))), .s2_dict(list("scope"), list("proposed_full_coverage_of_preclassified_amounts_only")), .s2_dict(list("classification_and_transferability"), list("EXTERNAL_INPUT_ONLY"))))))
 }
@@ -5681,7 +5681,7 @@ return(c(list(`upper`), list(.s2_merge(`details`, .s2_dict(list("method"), list(
 .s2_native_require(.s2_all(local({ .tmp4 <- list(); for (.tmp5 in .s2_iter(`history`)) { `value` <- .tmp5; .tmp4[length(.tmp4) + 1L] <- list((.s2_compare(`value`, 0, ">="))) }; .tmp4 })), "historical_values", "negative payout history requires separate method qualification", "REVIEW_REQUIRED")
 .s2_native_require(.s2_isinstance(`public_announcements`, c("list", "tuple")), "public_announcements", "explicit list required, empty if no relevant public announcement", "MISSING_INPUT")
 `announcements` <- local({ .tmp6 <- list(); for (.tmp7 in .s2_iter(.s2_enumerate(`public_announcements`))) { .tmp8 <- .tmp7; `index` <- .s2_at(.tmp8, 0); `value` <- .s2_at(.tmp8, 1); .tmp6[length(.tmp6) + 1L] <- list(.s2_number(`value`, paste0("public_announcements.", .s2_stringify(`index`)), 0)) }; .tmp6 })
-`average` <- .s2_sum(local({ .tmp9 <- list(); for (.tmp10 in .s2_iter(`history`)) { `value` <- .tmp10; .tmp9[length(.tmp9) + 1L] <- list(.s2_divide(`value`, `count`)) }; .tmp9 }))
+`average` <- .s2_fsum(local({ .tmp9 <- list(); for (.tmp10 in .s2_iter(`history`)) { `value` <- .tmp10; .tmp9[length(.tmp9) + 1L] <- list(.s2_divide(`value`, `count`)) }; .tmp9 }))
 `basis` <- do.call(.s2_max, c(list(`average`), list(.s2_at(`history`, -(1))), `announcements`))
 return(c(list(`basis`), list(.s2_merge(`details`, .s2_dict(list("method"), list("PRUDENT_HISTORY_AND_PUBLIC_FALLBACK")), .s2_dict(list("historical_values"), list(`history`)), .s2_dict(list("historical_mean"), list(`average`)), .s2_dict(list("latest_year"), list(.s2_at(`history`, -(1)))), .s2_dict(list("history_years"), list(.s2_int(`count`))), .s2_dict(list("public_announcements"), list(`announcements`))))))
 }
@@ -5725,7 +5725,7 @@ if (.s2_truth((.s2_equal(`method`, "payout_ratio")))) {
 `current` <- .s2_multiply(`annual`, `fraction`)
 `details` <- .s2_update(`details`, .s2_merge(.s2_merge(.s2_dict(list("estimated_annual_distribution"), list(`annual`)), .s2_dict(list("elapsed_year_fraction"), list(`fraction`)))))
 }
-return(c(list(.s2_sum(c(list(`prior`), list(`current`)))), list(.s2_merge(`details`, .s2_dict(list("prior_year_distributions"), list(`prior`)), .s2_dict(list("current_year_accrual"), list(`current`))))))
+return(c(list(.s2_fsum(c(list(`prior`), list(`current`)))), list(.s2_merge(`details`, .s2_dict(list("prior_year_distributions"), list(`prior`)), .s2_dict(list("current_year_accrual"), list(`current`))))))
 }
 
 # Source: partial_model_certificate.py:12
@@ -6372,7 +6372,7 @@ for (.tmp3 in .s2_iter(.s2_method(`cashflows`, "items"))) {
 `discounted` <- .s2_number(.s2_multiply(`net`, `factor`), paste0(.s2_stringify(`label`), ".discounted_cashflow"))
 `details` <- .s2_put(`details`, `label`, .s2_merge(.s2_dict(list("net_expected_outflow"), list(`net`)), .s2_dict(list("discount_factor"), list(`factor`)), .s2_dict(list("discounted_cashflow"), list(`discounted`))))
 }
-return(c(list(.s2_sum(local({ .tmp5 <- list(); for (.tmp6 in .s2_iter(.s2_method(`details`, "values"))) { `row` <- .tmp6; .tmp5[length(.tmp5) + 1L] <- list(.s2_at(`row`, "discounted_cashflow")) }; .tmp5 }))), list(.s2_merge(.s2_dict(list("cashflows"), list(`details`)), .s2_dict(list("cashflow_reference"), list(`cashflow_reference`)), .s2_dict(list("curve_reference"), list(`curve_reference`)), .s2_dict(list("projection_and_curve_status"), list("EXTERNAL_UNVERIFIED")), .s2_dict(list("_sources"), list(c(list(.s2_native_provisions___directive_source(`context`, "article-77-2"))))), .s2_dict(list("scope"), list("expected_gross_cashflows_only_recoverables_separate"))))))
+return(c(list(.s2_fsum(local({ .tmp5 <- list(); for (.tmp6 in .s2_iter(.s2_method(`details`, "values"))) { `row` <- .tmp6; .tmp5[length(.tmp5) + 1L] <- list(.s2_at(`row`, "discounted_cashflow")) }; .tmp5 }))), list(.s2_merge(.s2_dict(list("cashflows"), list(`details`)), .s2_dict(list("cashflow_reference"), list(`cashflow_reference`)), .s2_dict(list("curve_reference"), list(`curve_reference`)), .s2_dict(list("projection_and_curve_status"), list("EXTERNAL_UNVERIFIED")), .s2_dict(list("_sources"), list(c(list(.s2_native_provisions___directive_source(`context`, "article-77-2"))))), .s2_dict(list("scope"), list("expected_gross_cashflows_only_recoverables_separate"))))))
 }
 
 # Source: provisions.py:16
@@ -6415,7 +6415,7 @@ for (.tmp8 in .s2_iter(.s2_method(`market_values`, "items"))) {
 .s2_native_require(.s2_and(.s2_isinstance(`key`, c("str")), .s2_truth(.s2_method(`key`, "strip"))), "market_values", "nonempty position identifier required")
 `values` <- .s2_put(`values`, `key`, .s2_number(`value`, paste0("market_values.", .s2_stringify(`key`))))
 }
-return(c(list(.s2_sum(.s2_method(`values`, "values"))), list(.s2_merge(.s2_dict(list("market_values"), list(`values`)), .s2_dict(list("cashflow_features"), list(.s2_dict_from(`cashflow_features`))), .s2_dict(list("replication_reference"), list(`replication_reference`)), .s2_dict(list("market_reference"), list(`market_reference`)), .s2_dict(list("qualification_status"), list("EXTERNAL_UNVERIFIED")), .s2_dict(list("scope"), list("market_value_arithmetic_only"))))))
+return(c(list(.s2_fsum(.s2_method(`values`, "values"))), list(.s2_merge(.s2_dict(list("market_values"), list(`values`)), .s2_dict(list("cashflow_features"), list(.s2_dict_from(`cashflow_features`))), .s2_dict(list("replication_reference"), list(`replication_reference`)), .s2_dict(list("market_reference"), list(`market_reference`)), .s2_dict(list("qualification_status"), list("EXTERNAL_UNVERIFIED")), .s2_dict(list("scope"), list("market_value_arithmetic_only"))))))
 }
 
 # Source: provisions.py:110
@@ -6425,7 +6425,7 @@ return(c(list(.s2_sum(.s2_method(`values`, "values"))), list(.s2_merge(.s2_dict(
 .s2_native_require(!.s2_truth(`replication_applies`), "replication_applies", "use replicated_cashflow_value for the replication method, not BE+RM", "UNSUPPORTED_METHOD")
 `be` <- .s2_number(`best_estimate`, "best_estimate")
 `margin` <- .s2_number(`risk_margin`, "risk_margin", 0)
-return(c(list(.s2_sum(c(list(`be`), list(`margin`)))), list(.s2_merge(.s2_dict(list("best_estimate"), list(`be`)), .s2_dict(list("risk_margin"), list(`margin`)), .s2_dict(list("_sources"), list(c(list(.s2_native_provisions___directive_source(`context`, "article-77-1-4"))))), .s2_dict(list("valuation_method"), list("SEPARATE_BE_AND_RM")), .s2_dict(list("method_applicability"), list("EXTERNAL_UNVERIFIED"))))))
+return(c(list(.s2_fsum(c(list(`be`), list(`margin`)))), list(.s2_merge(.s2_dict(list("best_estimate"), list(`be`)), .s2_dict(list("risk_margin"), list(`margin`)), .s2_dict(list("_sources"), list(c(list(.s2_native_provisions___directive_source(`context`, "article-77-1-4"))))), .s2_dict(list("valuation_method"), list("SEPARATE_BE_AND_RM")), .s2_dict(list("method_applicability"), list("EXTERNAL_UNVERIFIED"))))))
 }
 
 # Source: prudent_deterministic.py:14
@@ -6556,7 +6556,7 @@ for (.tmp2 in .s2_iter(.s2_method(`cashflows`, "items"))) {
 `factor` <- .s2_native__cashflows__payment_discount_factor(`label`, .s2_at(`row`, "discount_factor"), `context`)
 `rows` <- .s2_put(`rows`, `label`, .s2_merge(.s2_dict(list(`amount_key`), list(`amount`)), .s2_dict(list("discount_factor"), list(`factor`)), .s2_dict(list("discounted_cashflow"), list(.s2_number(.s2_multiply(`amount`, `factor`), paste0(.s2_stringify(`label`), ".discounted_cashflow"))))))
 }
-return(c(list(.s2_sum(local({ .tmp4 <- list(); for (.tmp5 in .s2_iter(.s2_method(`rows`, "values"))) { `row` <- .tmp5; .tmp4[length(.tmp4) + 1L] <- list(.s2_at(`row`, "discounted_cashflow")) }; .tmp4 }))), list(.s2_merge(.s2_dict(list("partition"), list(.s2_dict_from(`partition`))), .s2_dict(list("cashflows"), list(`rows`)), .s2_dict(list("projection_reference"), list(`projection_reference`)), .s2_dict(list("curve_reference"), list(`curve_reference`)), .s2_dict(list("projection_curve_and_classification_status"), list("EXTERNAL_UNVERIFIED"))))))
+return(c(list(.s2_fsum(local({ .tmp4 <- list(); for (.tmp5 in .s2_iter(.s2_method(`rows`, "values"))) { `row` <- .tmp5; .tmp4[length(.tmp4) + 1L] <- list(.s2_at(`row`, "discounted_cashflow")) }; .tmp4 }))), list(.s2_merge(.s2_dict(list("partition"), list(.s2_dict_from(`partition`))), .s2_dict(list("cashflows"), list(`rows`)), .s2_dict(list("projection_reference"), list(`projection_reference`)), .s2_dict(list("curve_reference"), list(`curve_reference`)), .s2_dict(list("projection_curve_and_classification_status"), list("EXTERNAL_UNVERIFIED"))))))
 }
 
 # Source: reinsurance.py:35
@@ -6625,7 +6625,7 @@ if (.s2_truth(`included`)) {
 }
 `details` <- .s2_put(`details`, `label`, .s2_merge(.s2_dict(list("amount"), list(`amount`)), .s2_dict(list("claim_in_gross_claims_provision"), list(`linkage`)), .s2_dict(list("provision_type"), list(`provision`)), .s2_dict(list("selected"), list(`included`))))
 }
-return(c(list(.s2_sum(`selected`)), list(.s2_merge(.s2_dict(list("payments"), list(`details`)), .s2_dict(list("target_provision"), list(`target_provision`)), .s2_dict(list("eligibility_reference"), list(`eligibility_reference`)), .s2_dict(list("eligibility_and_classification_status"), list("EXTERNAL_UNVERIFIED")), .s2_dict(list("scope"), list("nonlife_allocation_only_not_payment_eligibility_or_valuation"))))))
+return(c(list(.s2_fsum(`selected`)), list(.s2_merge(.s2_dict(list("payments"), list(`details`)), .s2_dict(list("target_provision"), list(`target_provision`)), .s2_dict(list("eligibility_reference"), list(`eligibility_reference`)), .s2_dict(list("eligibility_and_classification_status"), list("EXTERNAL_UNVERIFIED")), .s2_dict(list("scope"), list("nonlife_allocation_only_not_payment_eligibility_or_valuation"))))))
 }
 
 # Source: reinsurance.py:135
@@ -6846,7 +6846,7 @@ for (.tmp4 in .s2_iter(`portfolio_kinds`)) {
 `gross` <- .s2_put(`gross`, `key`, local({ .tmp5 <- .s2_object(); for (.tmp6 in .s2_iter(`scenarios`)) { `s` <- .tmp6; .tmp5 <- .s2_put(.tmp5, `s`, .s2_number(.s2_at(.s2_at(`gross_losses`, `key`), `s`), paste0("gross/", .s2_stringify(`key`), "/", .s2_stringify(`s`)))) }; .tmp5 }))
 `net` <- .s2_put(`net`, `key`, local({ .tmp7 <- .s2_object(); for (.tmp8 in .s2_iter(`scenarios`)) { `s` <- .tmp8; .tmp7 <- .s2_put(.tmp7, `s`, .s2_number(.s2_at(.s2_at(`net_losses`, `key`), `s`), paste0("net/", .s2_stringify(`key`), "/", .s2_stringify(`s`)))) }; .tmp7 }))
 }
-`totals` <- local({ .tmp9 <- .s2_object(); for (.tmp12 in .s2_iter(`scenarios`)) { `s` <- .tmp12; .tmp9 <- .s2_put(.tmp9, `s`, .s2_sum(local({ .tmp10 <- list(); for (.tmp11 in .s2_iter(`portfolio_kinds`)) { `p` <- .tmp11; .tmp10[length(.tmp10) + 1L] <- list(.s2_at(.s2_at(`net`, `p`), `s`)) }; .tmp10 }))) }; .tmp9 })
+`totals` <- local({ .tmp9 <- .s2_object(); for (.tmp12 in .s2_iter(`scenarios`)) { `s` <- .tmp12; .tmp9 <- .s2_put(.tmp9, `s`, .s2_fsum(local({ .tmp10 <- list(); for (.tmp11 in .s2_iter(`portfolio_kinds`)) { `p` <- .tmp11; .tmp10[length(.tmp10) + 1L] <- list(.s2_at(.s2_at(`net`, `p`), `s`)) }; .tmp10 }))) }; .tmp9 })
 `maximum` <- .s2_max(.s2_method(`totals`, "values"))
 `winners` <- .s2_sorted(local({ .tmp13 <- list(); for (.tmp14 in .s2_iter(`scenarios`)) { `s` <- .tmp14; if (.s2_truth((.s2_equal(.s2_at(`totals`, `s`), `maximum`)))) { .tmp13[length(.tmp13) + 1L] <- list(`s`) } }; .tmp13 }))
 if (.s2_truth((!is.null(`tie_break`)))) {
@@ -6867,7 +6867,7 @@ return(c(list(.s2_max(`signed`, 0)), list(.s2_merge(`details`, .s2_dict(list("se
 `details` <- .s2_native_restricted_portfolios___scope(`portfolio_kinds`, `article217_scope_confirmed`, `qualification_reference`, `context`)
 .s2_keys(`notional_scr`, .s2_list(`portfolio_kinds`), "notional_scr")
 `values` <- local({ .tmp1 <- .s2_object(); for (.tmp2 in .s2_iter(.s2_method(`notional_scr`, "items"))) { .tmp3 <- .tmp2; `k` <- .s2_at(.tmp3, 0); `v` <- .s2_at(.tmp3, 1); .tmp1 <- .s2_put(.tmp1, `k`, .s2_number(`v`, .s2_add("notional_scr/", `k`), 0)) }; .tmp1 })
-return(c(list(.s2_sum(.s2_method(`values`, "values"))), list(.s2_merge(`details`, .s2_dict(list("notional_scr"), list(`values`)), .s2_dict(list("between_portfolio_diversification"), list(FALSE)), .s2_dict(list("scope"), list("article217_sum_not_regulatory_total_release"))))))
+return(c(list(.s2_fsum(.s2_method(`values`, "values"))), list(.s2_merge(`details`, .s2_dict(list("notional_scr"), list(`values`)), .s2_dict(list("between_portfolio_diversification"), list(FALSE)), .s2_dict(list("scope"), list("article217_sum_not_regulatory_total_release"))))))
 }
 
 # Source: rfr.py:10
@@ -6930,7 +6930,7 @@ return(c(list(`value`), list(.s2_merge(`details`, .s2_dict(list("inputs"), list(
 `amount` <- .s2_number(`cashflow`, "cashflow", 0)
 `probability` <- .s2_number(`default_probability`, "default_probability", 0, 1)
 `recovery` <- .s2_number(.s2_scalar("rfr_fs_recovery_fraction", `context`), "recovery_fraction", 0, 1)
-`factor` <- .s2_sum(c(list(.s2_subtract(1, `probability`)), list(.s2_multiply(`recovery`, `probability`))))
+`factor` <- .s2_fsum(c(list(.s2_subtract(1, `probability`)), list(.s2_multiply(`recovery`, `probability`))))
 return(c(list(.s2_multiply(`amount`, `factor`)), list(.s2_merge(.s2_dict(list("cashflow"), list(`amount`)), .s2_dict(list("default_probability"), list(`probability`)), .s2_dict(list("recovery_fraction"), list(`recovery`)), .s2_dict(list("adjustment_factor"), list(`factor`)), .s2_dict(list("method_source"), list("SRC-0205:12.5.9:PDF78")), .s2_dict(list("qualification_reference"), list(`qualification_reference`)), .s2_dict(list("qualification_status"), list("EXTERNAL_UNVERIFIED")), .s2_dict(list("scope"), list("single_asset_cashflow_derisking_not_projection_or_ma_approval"))))))
 }
 
@@ -6990,7 +6990,7 @@ if (.s2_truth((.s2_compare(`amount`, 0, ">")))) {
 }
 }
 .s2_native_require(.s2_truth(`future`), "cashflows", "positive future cashflow required for a unique rate", "REVIEW_REQUIRED")
-`immediate_value` <- .s2_sum(`immediate`)
+`immediate_value` <- .s2_fsum(`immediate`)
 `future_target` <- .s2_number(.s2_subtract(`target`, `immediate_value`), "future_target")
 .s2_native_require((.s2_compare(`future_target`, 0, ">")), "present_value", "target must exceed immediate cashflows", "REVIEW_REQUIRED")
 `log_target` <- log(`future_target`)
@@ -7000,7 +7000,7 @@ if (.s2_truth((.s2_compare(`amount`, 0, ">")))) {
 if (.s2_truth(!.s2_truth(is.finite(`largest`)))) {
 return(`largest`)
 }
-return(.s2_subtract(.s2_add(`largest`, log(.s2_sum(local({ .tmp4 <- list(); for (.tmp5 in .s2_iter(`terms`)) { `term` <- .tmp5; .tmp4[length(.tmp4) + 1L] <- list(exp(.s2_subtract(`term`, `largest`))) }; .tmp4 })))), `log_target`))
+return(.s2_subtract(.s2_add(`largest`, log(.s2_fsum(local({ .tmp4 <- list(); for (.tmp5 in .s2_iter(`terms`)) { `term` <- .tmp5; .tmp4[length(.tmp4) + 1L] <- list(exp(.s2_subtract(`term`, `largest`))) }; .tmp4 })))), `log_target`))
 }
 `low` <- log1p(.s2_nextafter(-(1.0), 0.0))
 `high` <- log(.Machine$double.xmax)
@@ -7041,7 +7041,7 @@ return(c(list(`rate`), list(.s2_merge(.s2_dict(list("present_value"), list(`targ
 if (.s2_truth(`default_statistics_reliable`)) {
 `default` <- .s2_number(`default_spread`, "default_spread", 0)
 `downgrade` <- .s2_number(`downgrade_spread`, "downgrade_spread", 0)
-`component_sum` <- .s2_number(.s2_sum(c(list(`default`), list(`downgrade`))), "component_sum", 0)
+`component_sum` <- .s2_number(.s2_fsum(c(list(`default`), list(`downgrade`))), "component_sum", 0)
 `value` <- .s2_max(`component_sum`, `floor`)
 } else {
 .s2_native_require(.s2_and((is.null(`default_spread`)), (is.null(`downgrade_spread`))), "credit_components", "omit both components when using the unreliable-statistics fallback")
@@ -7085,7 +7085,7 @@ return(c(list(`value`), list(.s2_merge(.s2_dict(list("market_rate"), list(`marke
 .s2_native_require((.s2_compare(`asset`, -(1), ">")), "asset_equivalent_rate", "effective annual rate must exceed -1")
 .s2_native_require((.s2_compare(`liability`, -(1), ">")), "liability_equivalent_rate", "effective annual rate must exceed -1")
 `residual` <- .s2_number(`residual_fundamental_spread`, "residual_fundamental_spread")
-`raw` <- .s2_sum(c(list(`asset`), list(-(`liability`)), list(-(`residual`))))
+`raw` <- .s2_fsum(c(list(`asset`), list(-(`liability`)), list(-(`residual`))))
 `apply_subinvestment_comparison` <- .s2_native_rfr_ma_controls__apply_subinvestment_comparison
 `check_matching_application` <- .s2_native_rfr_ma_controls__check_matching_application
 .tmp1 <- `apply_subinvestment_comparison`(`raw`, `residual`, `subinvestment_grade_comparison`); `value` <- .s2_at(.tmp1, 0); `comparison` <- .s2_at(.tmp1, 1)
@@ -7162,7 +7162,7 @@ return(c(list(`stressed`), list(.s2_merge(.s2_dict(list("base_rate"), list(`base
 .s2_native_rfr___reference(`qualification_reference`)
 `wg` <- .s2_number(`government_weight`, "government_weight", 0, 1)
 `wc` <- .s2_number(`corporate_weight`, "corporate_weight", 0, 1)
-.s2_native_require((.s2_compare(.s2_sum(c(list(`wg`), list(`wc`))), 1, "<=")), "weights", "whole-portfolio weights must sum to at most one")
+.s2_native_require((.s2_compare(.s2_fsum(c(list(`wg`), list(`wc`))), 1, "<=")), "weights", "whole-portfolio weights must sum to at most one")
 `derivations` <- .s2_merge()
 if (.s2_truth((!is.null(`fundamental_spread_inputs`)))) {
 .s2_native_require(.s2_and((is.null(`government_risk_correction`)), (is.null(`corporate_risk_correction`))), "risk_corrections", "omit direct category inputs when deriving from fundamental spread")
@@ -7182,7 +7182,7 @@ if (.s2_truth((.s2_equal(`category`, "corporate")))) {
 `rc` <- .s2_number(`corporate_risk_correction`, "corporate_risk_correction")
 `government` <- .s2_multiply(`wg`, .s2_max(`rg`, 0))
 `corporate` <- .s2_multiply(`wc`, .s2_max(`rc`, 0))
-return(c(list(.s2_sum(c(list(`government`), list(`corporate`)))), list(.s2_merge(.s2_dict(list("government_contribution"), list(`government`)), .s2_dict(list("corporate_contribution"), list(`corporate`)), .s2_dict(list("government_risk_correction"), list(`rg`)), .s2_dict(list("corporate_risk_correction"), list(`rc`)), .s2_dict(list("category_derivations"), list(local({ .tmp3 <- .s2_object(); for (.tmp4 in .s2_iter(.s2_method(`derivations`, "items"))) { .tmp5 <- .tmp4; `key` <- .s2_at(.tmp5, 0); `result` <- .s2_at(.tmp5, 1); .tmp3 <- .s2_put(.tmp3, `key`, .s2_method(`result`, "to_dict")) }; .tmp3 }))), .s2_dict(list("category_method_status"), list((if (.s2_truth(`derivations`)) "FUNDAMENTAL_SPREAD_METHOD" else "EXTERNAL_CATEGORY_INPUTS"))), .s2_dict(list("other_asset_weight"), list(.s2_subtract(1, .s2_sum(c(list(`wg`), list(`wc`)))))), .s2_dict(list("unit"), list("decimal_rate")), .s2_dict(list("method_source"), list("SRC-0205:10.3.5:PDF58-59")), .s2_dict(list("qualification_reference"), list(`qualification_reference`)), .s2_dict(list("qualification_status"), list("EXTERNAL_UNVERIFIED")), .s2_dict(list("scope"), list("portfolio_risk_correction_not_market_credit_estimation_or_official_va")), .s2_dict(list("_sources"), list((if (.s2_truth(`derivations`)) c(list("SRC-0205:12.1.1-3")) else list())))))))
+return(c(list(.s2_fsum(c(list(`government`), list(`corporate`)))), list(.s2_merge(.s2_dict(list("government_contribution"), list(`government`)), .s2_dict(list("corporate_contribution"), list(`corporate`)), .s2_dict(list("government_risk_correction"), list(`rg`)), .s2_dict(list("corporate_risk_correction"), list(`rc`)), .s2_dict(list("category_derivations"), list(local({ .tmp3 <- .s2_object(); for (.tmp4 in .s2_iter(.s2_method(`derivations`, "items"))) { .tmp5 <- .tmp4; `key` <- .s2_at(.tmp5, 0); `result` <- .s2_at(.tmp5, 1); .tmp3 <- .s2_put(.tmp3, `key`, .s2_method(`result`, "to_dict")) }; .tmp3 }))), .s2_dict(list("category_method_status"), list((if (.s2_truth(`derivations`)) "FUNDAMENTAL_SPREAD_METHOD" else "EXTERNAL_CATEGORY_INPUTS"))), .s2_dict(list("other_asset_weight"), list(.s2_subtract(1, .s2_fsum(c(list(`wg`), list(`wc`)))))), .s2_dict(list("unit"), list("decimal_rate")), .s2_dict(list("method_source"), list("SRC-0205:10.3.5:PDF58-59")), .s2_dict(list("qualification_reference"), list(`qualification_reference`)), .s2_dict(list("qualification_status"), list("EXTERNAL_UNVERIFIED")), .s2_dict(list("scope"), list("portfolio_risk_correction_not_market_credit_estimation_or_official_va")), .s2_dict(list("_sources"), list((if (.s2_truth(`derivations`)) c(list("SRC-0205:12.1.1-3")) else list())))))))
 }
 
 # Source: rfr.py:148
@@ -7191,12 +7191,12 @@ return(c(list(.s2_sum(c(list(`government`), list(`corporate`)))), list(.s2_merge
 .s2_native_rfr___reference(`qualification_reference`)
 `wg` <- .s2_number(`government_weight`, "government_weight", 0, 1)
 `wc` <- .s2_number(`corporate_weight`, "corporate_weight", 0, 1)
-.s2_native_require((.s2_compare(.s2_sum(c(list(`wg`), list(`wc`))), 1, "<=")), "weights", "whole-portfolio weights must sum to at most one")
+.s2_native_require((.s2_compare(.s2_fsum(c(list(`wg`), list(`wc`))), 1, "<=")), "weights", "whole-portfolio weights must sum to at most one")
 `sg` <- .s2_number(`government_spread`, "government_spread")
 `sc` <- .s2_number(`corporate_spread`, "corporate_spread")
 `government` <- .s2_multiply(`wg`, .s2_max(`sg`, 0))
 `corporate` <- .s2_multiply(`wc`, .s2_max(`sc`, 0))
-return(c(list(.s2_sum(c(list(`government`), list(`corporate`)))), list(.s2_merge(.s2_dict(list("government_contribution"), list(`government`)), .s2_dict(list("corporate_contribution"), list(`corporate`)), .s2_dict(list("other_asset_weight"), list(.s2_subtract(1, .s2_sum(c(list(`wg`), list(`wc`)))))), .s2_dict(list("unit"), list("decimal_rate")), .s2_dict(list("qualification_reference"), list(`qualification_reference`)), .s2_dict(list("qualification_status"), list("EXTERNAL_UNVERIFIED")), .s2_dict(list("scope"), list("reference_portfolio_spread_not_official_va"))))))
+return(c(list(.s2_fsum(c(list(`government`), list(`corporate`)))), list(.s2_merge(.s2_dict(list("government_contribution"), list(`government`)), .s2_dict(list("corporate_contribution"), list(`corporate`)), .s2_dict(list("other_asset_weight"), list(.s2_subtract(1, .s2_fsum(c(list(`wg`), list(`wc`)))))), .s2_dict(list("unit"), list("decimal_rate")), .s2_dict(list("qualification_reference"), list(`qualification_reference`)), .s2_dict(list("qualification_status"), list("EXTERNAL_UNVERIFIED")), .s2_dict(list("scope"), list("reference_portfolio_spread_not_official_va"))))))
 }
 
 # Source: rfr.py:214
@@ -7332,7 +7332,7 @@ for (.tmp11 in .s2_iter(`tenors`)) {
 `coupon` <- .s2_divide(.s2_at(`rates`, `tenor`), `frequency`)
 .s2_native_require((.s2_compare(`coupon`, -(1), ">")), "swap_rate", "periodic coupon must exceed -1")
 `count` <- .s2_multiply(.s2_subtract(`tenor`, `previous`), `frequency`)
-`known_sum` <- .s2_sum(.s2_slice(`discounts`, 1, NULL, NULL))
+`known_sum` <- .s2_fsum(.s2_slice(`discounts`, 1, NULL, NULL))
 `start` <- .s2_at(`discounts`, -(1))
 `x` <- (if (.s2_truth((.s2_equal(`previous`, 0)))) .s2_divide(1, .s2_add(1, `coupon`)) else .s2_native_rfr_curve_2027___swap_interval(`coupon`, `known_sum`, `start`, `count`))
 .s2_native_require(.s2_and((.s2_compare(`x`, 0, ">")), is.finite(`x`)), "swap_discount", "positive finite discount required", "REVIEW_REQUIRED")
@@ -7342,7 +7342,7 @@ for (.tmp12 in .s2_iter(.s2_range(1, .s2_add(`count`, 1)))) {
 .s2_native_require(.s2_and((.s2_compare(`discount`, 0, ">")), is.finite(`discount`)), "swap_discount", "unrepresentable coupon discount", "REVIEW_REQUIRED")
 `discounts` <- c(`discounts`, list(`discount`))
 }
-`price` <- .s2_add(.s2_multiply(`coupon`, .s2_sum(.s2_slice(`discounts`, 1, NULL, NULL))), .s2_at(`discounts`, -(1)))
+`price` <- .s2_add(.s2_multiply(`coupon`, .s2_fsum(.s2_slice(`discounts`, 1, NULL, NULL))), .s2_at(`discounts`, -(1)))
 .s2_native_require(.s2_and(is.finite(`price`), (.s2_compare(abs(.s2_subtract(`price`, 1)), 1e-09, "<="))), "swap_repricing", "par-swap residual exceeds numerical tolerance", "REVIEW_REQUIRED")
 `price_errors` <- .s2_put(`price_errors`, .s2_stringify(`tenor`), .s2_subtract(`price`, 1))
 `knot_logs` <- .s2_put(`knot_logs`, `tenor`, log(.s2_at(`discounts`, -(1))))
@@ -7364,7 +7364,7 @@ return(.s2_at(`knot_logs`, `t`))
 `index` <- .s2_bisect_left(`knots`, `t`)
 .tmp1 <- c(list(.s2_at(`knots`, .s2_subtract(`index`, 1))), list(.s2_at(`knots`, `index`))); `left` <- .s2_at(.tmp1, 0); `right` <- .s2_at(.tmp1, 1)
 `weight` <- .s2_divide(.s2_subtract(`t`, `left`), .s2_subtract(`right`, `left`))
-return(.s2_sum(c(list(.s2_multiply(.s2_subtract(1, `weight`), .s2_at(`knot_logs`, `left`))), list(.s2_multiply(`weight`, .s2_at(`knot_logs`, `right`))))))
+return(.s2_fsum(c(list(.s2_multiply(.s2_subtract(1, `weight`), .s2_at(`knot_logs`, `left`))), list(.s2_multiply(`weight`, .s2_at(`knot_logs`, `right`))))))
 }
 `stress_nodes` <- .s2_merge()
 `scenario_log_discount` <- function(`t`) {
@@ -7406,8 +7406,8 @@ if (.s2_truth((.s2_compare(`t`, `fsp`, "<=")))) {
 `horizon` <- .s2_subtract(`t`, `fsp`)
 `product` <- .s2_multiply(`alpha`, `horizon`)
 `weight` <- (if (.s2_truth((.s2_equal(`product`, 0)))) 1.0 else .s2_divide(-(expm1(-(`product`))), `product`))
-`average_forward` <- .s2_sum(c(list(.s2_multiply(`weight`, .s2_at(`llfr`, "value"))), list(.s2_multiply(.s2_subtract(1, `weight`), `omega`))))
-`intensity` <- .s2_sum(c(list(.s2_multiply(.s2_divide(`fsp`, `t`), `fsp_intensity`)), list(.s2_multiply(.s2_divide(`horizon`, `t`), `average_forward`))))
+`average_forward` <- .s2_fsum(c(list(.s2_multiply(`weight`, .s2_at(`llfr`, "value"))), list(.s2_multiply(.s2_subtract(1, `weight`), `omega`))))
+`intensity` <- .s2_fsum(c(list(.s2_multiply(.s2_divide(`fsp`, `t`), `fsp_intensity`)), list(.s2_multiply(.s2_divide(`horizon`, `t`), `average_forward`))))
 }
 `spot` <- .s2_add(expm1(`intensity`), `ma`)
 `before_floor` <- `spot`
@@ -7445,7 +7445,7 @@ return(c(list(`terminal`), list(`details`)))
 `end` <- .s2_number(.s2_scalar("rfr_extrapolation_phase_end_year", `context`), "phase_end_year")
 .s2_native_require(.s2_and(.s2_method(`start`, "is_integer"), .s2_and(.s2_method(`end`, "is_integer"), (.s2_compare(`start`, `end`, "<")))), "phase_years", "ordered integer calendar years required")
 `elapsed_fraction` <- .s2_min(1, .s2_max(0, .s2_divide(.s2_subtract(`year`, `start`), .s2_subtract(`end`, `start`))))
-`alpha` <- .s2_sum(c(list(.s2_multiply(.s2_subtract(1, `elapsed_fraction`), `initial`)), list(.s2_multiply(`elapsed_fraction`, `terminal`))))
+`alpha` <- .s2_fsum(c(list(.s2_multiply(.s2_subtract(1, `elapsed_fraction`), `initial`)), list(.s2_multiply(`elapsed_fraction`, `terminal`))))
 return(c(list(`alpha`), list(.s2_merge(`details`, .s2_dict(list("initial_alpha"), list(`initial`)), .s2_dict(list("phase_start_year"), list(`start`)), .s2_dict(list("phase_end_year"), list(`end`)), .s2_dict(list("elapsed_fraction"), list(`elapsed_fraction`))))))
 }
 
@@ -7467,7 +7467,7 @@ return(c(list(`alpha`), list(.s2_merge(`details`, .s2_dict(list("initial_alpha")
 `product` <- .s2_multiply(`alpha`, `years`)
 `weight` <- (if (.s2_truth((.s2_equal(`product`, 0)))) 1.0 else .s2_divide(-(expm1(-(`product`))), `product`))
 `continuous_ufr` <- log1p(`ultimate`)
-`value` <- .s2_sum(c(list(.s2_multiply(`weight`, `liquid`)), list(.s2_multiply(.s2_subtract(1, `weight`), `continuous_ufr`))))
+`value` <- .s2_fsum(c(list(.s2_multiply(`weight`, `liquid`)), list(.s2_multiply(.s2_subtract(1, `weight`), `continuous_ufr`))))
 return(c(list(`value`), list(.s2_merge(`details`, .s2_dict(list("alpha"), list(`alpha`)), .s2_dict(list("ufr"), list(`ultimate`)), .s2_dict(list("continuous_ufr"), list(`continuous_ufr`)), .s2_dict(list("last_liquid_forward"), list(`liquid`)), .s2_dict(list("time_after_fsp"), list(`years`)), .s2_dict(list("llfr_weight"), list(`weight`)), .s2_dict(list("ufr_weight"), list(.s2_subtract(1, `weight`))), .s2_dict(list("qualification_reference"), list(`qualification_reference`)), .s2_dict(list("qualification_status"), list("EXTERNAL_UNVERIFIED")), .s2_dict(list("scope"), list("continuous_extrapolated_forward_not_llfr_or_official_curve"))))))
 }
 
@@ -7484,7 +7484,7 @@ return(c(list(`value`), list(.s2_merge(`details`, .s2_dict(list("alpha"), list(`
 `scale` <- .s2_max(`fsp`, `horizon`)
 `fsp_weight` <- .s2_divide(.s2_divide(`fsp`, `scale`), .s2_add(.s2_divide(`fsp`, `scale`), .s2_divide(`horizon`, `scale`)))
 `horizon_weight` <- .s2_divide(.s2_divide(`horizon`, `scale`), .s2_add(.s2_divide(`fsp`, `scale`), .s2_divide(`horizon`, `scale`)))
-`continuous_spot` <- .s2_sum(c(list(.s2_multiply(`fsp_weight`, log1p(`spot`))), list(.s2_multiply(`horizon_weight`, `forward`))))
+`continuous_spot` <- .s2_fsum(c(list(.s2_multiply(`fsp_weight`, log1p(`spot`))), list(.s2_multiply(`horizon_weight`, `forward`))))
 tryCatch({
 `result` <- expm1(`continuous_spot`)
 }, s2_overflow = function(`.error`) {
@@ -7686,7 +7686,7 @@ return(c(list(`value`), list(.s2_merge(`details`, .s2_dict(list("asset_pvbp"), l
 `coefficients` <- local({ .tmp1 <- .s2_object(); for (.tmp2 in .s2_iter(c(list("first"), list("second"), list("third"), list("cap")))) { `key` <- .tmp2; .tmp1 <- .s2_put(.tmp1, `key`, .s2_number(.s2_scalar(paste0("rfr_rc_", .s2_stringify(`asset_class`), "_", .s2_stringify(`key`)), `context`), `key`, 0)) }; .tmp1 })
 `excess` <- .s2_max(.s2_subtract(`spread_positive`, `ltas`), 0)
 `bands` <- c(list(.s2_min(`spread_positive`, `ltas`)), list(.s2_min(`excess`, `ltas`)), list(.s2_max(.s2_subtract(`excess`, `ltas`), 0)))
-`uncapped` <- .s2_sum(local({ .tmp3 <- list(); for (.tmp4 in .s2_iter(.s2_zip(c(list("first"), list("second"), list("third")), `bands`))) { .tmp5 <- .tmp4; `key` <- .s2_at(.tmp5, 0); `band` <- .s2_at(.tmp5, 1); .tmp3[length(.tmp3) + 1L] <- list(.s2_multiply(.s2_at(`coefficients`, `key`), `band`)) }; .tmp3 }))
+`uncapped` <- .s2_fsum(local({ .tmp3 <- list(); for (.tmp4 in .s2_iter(.s2_zip(c(list("first"), list("second"), list("third")), `bands`))) { .tmp5 <- .tmp4; `key` <- .s2_at(.tmp5, 0); `band` <- .s2_at(.tmp5, 1); .tmp3[length(.tmp3) + 1L] <- list(.s2_multiply(.s2_at(`coefficients`, `key`), `band`)) }; .tmp3 }))
 `cap` <- .s2_multiply(.s2_at(`coefficients`, "cap"), `ltas`)
 return(c(list(.s2_min(`uncapped`, `cap`)), list(.s2_merge(`details`, .s2_dict(list("asset_class"), list(`asset_class`)), .s2_dict(list("positive_spread"), list(`spread_positive`)), .s2_dict(list("positive_ltas"), list(`ltas`)), .s2_dict(list("band_amounts"), list(`bands`)), .s2_dict(list("coefficients"), list(`coefficients`)), .s2_dict(list("uncapped"), list(`uncapped`)), .s2_dict(list("cap"), list(`cap`)), .s2_dict(list("scope"), list("qualified_bucket_correction_only"))))))
 }
@@ -8048,7 +8048,7 @@ for (.tmp12 in .s2_iter(.s2_range(.s2_add(`k`, 1), .s2_add(`n`, 1)))) {
 `result` <- .s2_multiply(c(list(0.0)), `n`)
 for (.tmp13 in .s2_iter(.s2_range(.s2_subtract(`n`, 1), -(1), -(1)))) {
 `i` <- .tmp13
-`result` <- .s2_put(`result`, `i`, .s2_divide(.s2_subtract(.s2_at(.s2_at(`a`, `i`), `n`), .s2_sum(local({ .tmp14 <- list(); for (.tmp15 in .s2_iter(.s2_range(.s2_add(`i`, 1), `n`))) { `j` <- .tmp15; .tmp14[length(.tmp14) + 1L] <- list(.s2_multiply(.s2_at(.s2_at(`a`, `i`), `j`), .s2_at(`result`, `j`))) }; .tmp14 }))), .s2_at(.s2_at(`a`, `i`), `i`)))
+`result` <- .s2_put(`result`, `i`, .s2_divide(.s2_subtract(.s2_at(.s2_at(`a`, `i`), `n`), .s2_fsum(local({ .tmp14 <- list(); for (.tmp15 in .s2_iter(.s2_range(.s2_add(`i`, 1), `n`))) { `j` <- .tmp15; .tmp14[length(.tmp14) + 1L] <- list(.s2_multiply(.s2_at(.s2_at(`a`, `i`), `j`), .s2_at(`result`, `j`))) }; .tmp14 }))), .s2_at(.s2_at(`a`, `i`), `i`)))
 }
 .s2_native_require(.s2_all(local({ .tmp16 <- list(); for (.tmp17 in .s2_iter(`result`)) { `x` <- .tmp17; .tmp16[length(.tmp16) + 1L] <- list(is.finite(`x`)) }; .tmp16 })), "calibration", "nonfinite solution", "REVIEW_REQUIRED")
 return(`result`)
@@ -8097,19 +8097,19 @@ if (.s2_truth((.s2_equal(.s2_at(`context`, "currency"), "SEK")))) {
 .s2_native_require(.s2_and((.s2_compare(`period`, 0, ">")), is.finite(`convergence`)), "convergence_point", "finite point beyond LLP required")
 `discounts` <- local({ .tmp24 <- list(); for (.tmp25 in .s2_iter(`times`)) { `u` <- .tmp25; .tmp24[length(.tmp24) + 1L] <- list(exp(.s2_multiply(-(`omega`), `u`))) }; .tmp24 })
 `q` <- local({ .tmp26 <- list(); for (.tmp29 in .s2_iter(.s2_zip(`discounts`, `c`))) { .tmp30 <- .tmp29; `d` <- .s2_at(.tmp30, 0); `row` <- .s2_at(.tmp30, 1); .tmp26[length(.tmp26) + 1L] <- list(local({ .tmp27 <- list(); for (.tmp28 in .s2_iter(`row`)) { `x` <- .tmp28; .tmp27[length(.tmp27) + 1L] <- list(.s2_multiply(`d`, `x`)) }; .tmp27 })) }; .tmp26 })
-`rhs` <- local({ .tmp31 <- list(); for (.tmp34 in .s2_iter(.s2_range(`n`))) { `j` <- .tmp34; .tmp31[length(.tmp31) + 1L] <- list(.s2_subtract(.s2_at(`observed`, `j`), .s2_sum(local({ .tmp32 <- list(); for (.tmp33 in .s2_iter(`q`)) { `row` <- .tmp33; .tmp32[length(.tmp32) + 1L] <- list(.s2_at(`row`, `j`)) }; .tmp32 })))) }; .tmp31 })
+`rhs` <- local({ .tmp31 <- list(); for (.tmp34 in .s2_iter(.s2_range(`n`))) { `j` <- .tmp34; .tmp31[length(.tmp31) + 1L] <- list(.s2_subtract(.s2_at(`observed`, `j`), .s2_fsum(local({ .tmp32 <- list(); for (.tmp33 in .s2_iter(`q`)) { `row` <- .tmp33; .tmp32[length(.tmp32) + 1L] <- list(.s2_at(`row`, `j`)) }; .tmp32 })))) }; .tmp31 })
 `evaluations` <- 0
 `fit` <- function(`alpha`) {
 
 `evaluations` <<- .s2_add(`evaluations`, 1)
 `h` <- local({ .tmp1 <- list(); for (.tmp4 in .s2_iter(`times`)) { `v` <- .tmp4; .tmp1[length(.tmp1) + 1L] <- list(local({ .tmp2 <- list(); for (.tmp3 in .s2_iter(`times`)) { `u` <- .tmp3; .tmp2[length(.tmp2) + 1L] <- list(.s2_native_rfr_smith_wilson___h(`v`, `u`, `alpha`)) }; .tmp2 })) }; .tmp1 })
-`hq` <- local({ .tmp5 <- list(); for (.tmp10 in .s2_iter(`h`)) { `hrow` <- .tmp10; .tmp5[length(.tmp5) + 1L] <- list(local({ .tmp6 <- list(); for (.tmp9 in .s2_iter(.s2_range(`n`))) { `j` <- .tmp9; .tmp6[length(.tmp6) + 1L] <- list(.s2_sum(local({ .tmp7 <- list(); for (.tmp8 in .s2_iter(.s2_range(.s2_length(`times`)))) { `k` <- .tmp8; .tmp7[length(.tmp7) + 1L] <- list(.s2_multiply(.s2_at(`hrow`, `k`), .s2_at(.s2_at(`q`, `k`), `j`))) }; .tmp7 }))) }; .tmp6 })) }; .tmp5 })
-`system` <- local({ .tmp11 <- list(); for (.tmp16 in .s2_iter(.s2_range(`n`))) { `i` <- .tmp16; .tmp11[length(.tmp11) + 1L] <- list(local({ .tmp12 <- list(); for (.tmp15 in .s2_iter(.s2_range(`n`))) { `j` <- .tmp15; .tmp12[length(.tmp12) + 1L] <- list(.s2_sum(local({ .tmp13 <- list(); for (.tmp14 in .s2_iter(.s2_range(.s2_length(`times`)))) { `k` <- .tmp14; .tmp13[length(.tmp13) + 1L] <- list(.s2_multiply(.s2_at(.s2_at(`q`, `k`), `i`), .s2_at(.s2_at(`hq`, `k`), `j`))) }; .tmp13 }))) }; .tmp12 })) }; .tmp11 })
+`hq` <- local({ .tmp5 <- list(); for (.tmp10 in .s2_iter(`h`)) { `hrow` <- .tmp10; .tmp5[length(.tmp5) + 1L] <- list(local({ .tmp6 <- list(); for (.tmp9 in .s2_iter(.s2_range(`n`))) { `j` <- .tmp9; .tmp6[length(.tmp6) + 1L] <- list(.s2_fsum(local({ .tmp7 <- list(); for (.tmp8 in .s2_iter(.s2_range(.s2_length(`times`)))) { `k` <- .tmp8; .tmp7[length(.tmp7) + 1L] <- list(.s2_multiply(.s2_at(`hrow`, `k`), .s2_at(.s2_at(`q`, `k`), `j`))) }; .tmp7 }))) }; .tmp6 })) }; .tmp5 })
+`system` <- local({ .tmp11 <- list(); for (.tmp16 in .s2_iter(.s2_range(`n`))) { `i` <- .tmp16; .tmp11[length(.tmp11) + 1L] <- list(local({ .tmp12 <- list(); for (.tmp15 in .s2_iter(.s2_range(`n`))) { `j` <- .tmp15; .tmp12[length(.tmp12) + 1L] <- list(.s2_fsum(local({ .tmp13 <- list(); for (.tmp14 in .s2_iter(.s2_range(.s2_length(`times`)))) { `k` <- .tmp14; .tmp13[length(.tmp13) + 1L] <- list(.s2_multiply(.s2_at(.s2_at(`q`, `k`), `i`), .s2_at(.s2_at(`hq`, `k`), `j`))) }; .tmp13 }))) }; .tmp12 })) }; .tmp11 })
 `b` <- .s2_native_rfr_smith_wilson___solve(`system`, `rhs`)
-`beta` <- local({ .tmp17 <- list(); for (.tmp21 in .s2_iter(`q`)) { `row` <- .tmp21; .tmp17[length(.tmp17) + 1L] <- list(.s2_sum(local({ .tmp18 <- list(); for (.tmp19 in .s2_iter(.s2_zip(`row`, `b`))) { .tmp20 <- .tmp19; `x` <- .s2_at(.tmp20, 0); `y` <- .s2_at(.tmp20, 1); .tmp18[length(.tmp18) + 1L] <- list(.s2_multiply(`x`, `y`)) }; .tmp18 }))) }; .tmp17 })
-`factor` <- .s2_add(1, .s2_sum(local({ .tmp22 <- list(); for (.tmp23 in .s2_iter(.s2_zip(`times`, `beta`))) { .tmp24 <- .tmp23; `u` <- .s2_at(.tmp24, 0); `x` <- .s2_at(.tmp24, 1); .tmp22[length(.tmp22) + 1L] <- list(.s2_multiply(.s2_native_rfr_smith_wilson___h(`convergence`, `u`, `alpha`), `x`)) }; .tmp22 })))
+`beta` <- local({ .tmp17 <- list(); for (.tmp21 in .s2_iter(`q`)) { `row` <- .tmp21; .tmp17[length(.tmp17) + 1L] <- list(.s2_fsum(local({ .tmp18 <- list(); for (.tmp19 in .s2_iter(.s2_zip(`row`, `b`))) { .tmp20 <- .tmp19; `x` <- .s2_at(.tmp20, 0); `y` <- .s2_at(.tmp20, 1); .tmp18[length(.tmp18) + 1L] <- list(.s2_multiply(`x`, `y`)) }; .tmp18 }))) }; .tmp17 })
+`factor` <- .s2_add(1, .s2_fsum(local({ .tmp22 <- list(); for (.tmp23 in .s2_iter(.s2_zip(`times`, `beta`))) { .tmp24 <- .tmp23; `u` <- .s2_at(.tmp24, 0); `x` <- .s2_at(.tmp24, 1); .tmp22[length(.tmp22) + 1L] <- list(.s2_multiply(.s2_native_rfr_smith_wilson___h(`convergence`, `u`, `alpha`), `x`)) }; .tmp22 })))
 .s2_native_require(.s2_and((.s2_compare(`factor`, 0, ">")), is.finite(`factor`)), "convergence_discount", "nonpositive or nonfinite convergence discount factor", "REVIEW_REQUIRED")
-`gap` <- abs(.s2_divide(.s2_sum(local({ .tmp25 <- list(); for (.tmp26 in .s2_iter(.s2_zip(`times`, `beta`))) { .tmp27 <- .tmp26; `u` <- .s2_at(.tmp27, 0); `x` <- .s2_at(.tmp27, 1); .tmp25[length(.tmp25) + 1L] <- list(.s2_multiply(.s2_native_rfr_smith_wilson___g(`convergence`, `u`, `alpha`), `x`)) }; .tmp25 })), `factor`))
+`gap` <- abs(.s2_divide(.s2_fsum(local({ .tmp25 <- list(); for (.tmp26 in .s2_iter(.s2_zip(`times`, `beta`))) { .tmp27 <- .tmp26; `u` <- .s2_at(.tmp27, 0); `x` <- .s2_at(.tmp27, 1); .tmp25[length(.tmp25) + 1L] <- list(.s2_multiply(.s2_native_rfr_smith_wilson___g(`convergence`, `u`, `alpha`), `x`)) }; .tmp25 })), `factor`))
 .s2_native_require(is.finite(`gap`), "convergence_gap", "nonfinite convergence gap", "REVIEW_REQUIRED")
 return(c(list(`beta`), list(`gap`)))
 }
@@ -8145,9 +8145,9 @@ break
 `alpha` <- .s2_divide(`high`, `scale`)
 }
 `node` <- function(`v`) {
-`factor` <- .s2_add(1, .s2_sum(local({ .tmp1 <- list(); for (.tmp2 in .s2_iter(.s2_zip(`times`, `beta`))) { .tmp3 <- .tmp2; `u` <- .s2_at(.tmp3, 0); `x` <- .s2_at(.tmp3, 1); .tmp1[length(.tmp1) + 1L] <- list(.s2_multiply(.s2_native_rfr_smith_wilson___h(`v`, `u`, `alpha`), `x`)) }; .tmp1 })))
+`factor` <- .s2_add(1, .s2_fsum(local({ .tmp1 <- list(); for (.tmp2 in .s2_iter(.s2_zip(`times`, `beta`))) { .tmp3 <- .tmp2; `u` <- .s2_at(.tmp3, 0); `x` <- .s2_at(.tmp3, 1); .tmp1[length(.tmp1) + 1L] <- list(.s2_multiply(.s2_native_rfr_smith_wilson___h(`v`, `u`, `alpha`), `x`)) }; .tmp1 })))
 .s2_native_require(.s2_and((.s2_compare(`factor`, 0, ">")), is.finite(`factor`)), "discount_factor", "nonpositive or nonfinite curve value", "REVIEW_REQUIRED")
-`forward` <- .s2_subtract(`omega`, .s2_divide(.s2_sum(local({ .tmp4 <- list(); for (.tmp5 in .s2_iter(.s2_zip(`times`, `beta`))) { .tmp6 <- .tmp5; `u` <- .s2_at(.tmp6, 0); `x` <- .s2_at(.tmp6, 1); .tmp4[length(.tmp4) + 1L] <- list(.s2_multiply(.s2_native_rfr_smith_wilson___g(`v`, `u`, `alpha`), `x`)) }; .tmp4 })), `factor`))
+`forward` <- .s2_subtract(`omega`, .s2_divide(.s2_fsum(local({ .tmp4 <- list(); for (.tmp5 in .s2_iter(.s2_zip(`times`, `beta`))) { .tmp6 <- .tmp5; `u` <- .s2_at(.tmp6, 0); `x` <- .s2_at(.tmp6, 1); .tmp4[length(.tmp4) + 1L] <- list(.s2_multiply(.s2_native_rfr_smith_wilson___g(`v`, `u`, `alpha`), `x`)) }; .tmp4 })), `factor`))
 `intensity` <- (if (.s2_truth((.s2_equal(`v`, 0)))) `forward` else .s2_subtract(`omega`, .s2_divide(log(`factor`), `v`)))
 `spot` <- expm1(`intensity`)
 `discount` <- exp(.s2_multiply(-(`v`), `intensity`))
@@ -8155,7 +8155,7 @@ break
 return(.s2_merge(.s2_dict(list("maturity"), list(`v`)), .s2_dict(list("annual_spot"), list(`spot`)), .s2_dict(list("discount_factor"), list(`discount`)), .s2_dict(list("forward_intensity"), list(`forward`))))
 }
 `payment_nodes` <- local({ .tmp40 <- list(); for (.tmp41 in .s2_iter(`times`)) { `v` <- .tmp41; .tmp40[length(.tmp40) + 1L] <- list(`node`(`v`)) }; .tmp40 })
-`fitted` <- local({ .tmp42 <- list(); for (.tmp45 in .s2_iter(.s2_range(`n`))) { `j` <- .tmp45; .tmp42[length(.tmp42) + 1L] <- list(.s2_sum(local({ .tmp43 <- list(); for (.tmp44 in .s2_iter(.s2_range(.s2_length(`times`)))) { `i` <- .tmp44; .tmp43[length(.tmp43) + 1L] <- list(.s2_multiply(.s2_at(.s2_at(`c`, `i`), `j`), .s2_at(.s2_at(`payment_nodes`, `i`), "discount_factor"))) }; .tmp43 }))) }; .tmp42 })
+`fitted` <- local({ .tmp42 <- list(); for (.tmp45 in .s2_iter(.s2_range(`n`))) { `j` <- .tmp45; .tmp42[length(.tmp42) + 1L] <- list(.s2_fsum(local({ .tmp43 <- list(); for (.tmp44 in .s2_iter(.s2_range(.s2_length(`times`)))) { `i` <- .tmp44; .tmp43[length(.tmp43) + 1L] <- list(.s2_multiply(.s2_at(.s2_at(`c`, `i`), `j`), .s2_at(.s2_at(`payment_nodes`, `i`), "discount_factor"))) }; .tmp43 }))) }; .tmp42 })
 `errors` <- local({ .tmp46 <- list(); for (.tmp47 in .s2_iter(.s2_zip(`observed`, `fitted`))) { .tmp48 <- .tmp47; `a` <- .s2_at(.tmp48, 0); `b` <- .s2_at(.tmp48, 1); .tmp46[length(.tmp46) + 1L] <- list(.s2_divide(abs(.s2_subtract(`a`, `b`)), .s2_max(1, abs(`a`)))) }; .tmp46 })
 .s2_native_require((.s2_compare(.s2_max(`errors`), 1e-09, "<=")), "instrument_repricing", "calibration residual exceeds numerical tolerance", "REVIEW_REQUIRED")
 `primary` <- `node`(`target`)
@@ -9369,7 +9369,7 @@ return(c(list(`result`), list(.s2_merge(`details`, .s2_dict(list("category"), li
 .s2_native_spread__spread_risk <- function(`bonds`, `securitisation`, `credit_derivatives`, `context`) {
 
 `components` <- local({ .tmp1 <- .s2_object(); for (.tmp2 in .s2_iter(c(list(c(list("bonds"), list(`bonds`))), list(c(list("securitisation"), list(`securitisation`))), list(c(list("credit_derivatives"), list(`credit_derivatives`)))))) { .tmp3 <- .tmp2; `name` <- .s2_at(.tmp3, 0); `value` <- .s2_at(.tmp3, 1); .tmp1 <- .s2_put(.tmp1, `name`, .s2_number(`value`, `name`, 0)) }; .tmp1 })
-return(c(list(.s2_sum(.s2_method(`components`, "values"))), list(.s2_merge(.s2_dict(list("components"), list(`components`)), .s2_dict(list("scope"), list("spread_submodule_sum_only"))))))
+return(c(list(.s2_fsum(.s2_method(`components`, "values"))), list(.s2_merge(.s2_dict(list("components"), list(`components`)), .s2_dict(list("scope"), list("spread_submodule_sum_only"))))))
 }
 
 # Source: symmetric_average.py:11
@@ -9656,9 +9656,9 @@ return(c(list(`default`), list(.s2_merge(`detail`, .s2_dict(list("selection_reas
 `scale` <- .s2_max(local({ .tmp6 <- list(); for (.tmp8 in .s2_iter(.s2_method(`volumes`, "values"))) { `pair` <- .tmp8; for (.tmp7 in .s2_iter(`pair`)) { `value` <- .tmp7; .tmp6[length(.tmp6) + 1L] <- list(`value`) } }; .tmp6 }))
 .s2_native_require((.s2_compare(`scale`, 0, ">")), "regional_volumes", "zero/zero ratio: select default explicitly if appropriate", "REVIEW_REQUIRED")
 `totals` <- local({ .tmp9 <- .s2_object(); for (.tmp10 in .s2_iter(.s2_method(`volumes`, "items"))) { .tmp11 <- .tmp10; `key` <- .s2_at(.tmp11, 0); .tmp12 <- .s2_at(.tmp11, 1); `p` <- .s2_at(.tmp12, 0); `r` <- .s2_at(.tmp12, 1); .tmp9 <- .s2_put(.tmp9, `key`, .s2_add(.s2_divide(`p`, `scale`), .s2_divide(`r`, `scale`))) }; .tmp9 })
-`total` <- .s2_sum(.s2_method(`totals`, "values"))
+`total` <- .s2_fsum(.s2_method(`totals`, "values"))
 `shares` <- local({ .tmp13 <- .s2_object(); for (.tmp14 in .s2_iter(.s2_method(`totals`, "items"))) { .tmp15 <- .tmp14; `key` <- .s2_at(.tmp15, 0); `value` <- .s2_at(.tmp15, 1); .tmp13 <- .s2_put(.tmp13, `key`, .s2_divide(`value`, `total`)) }; .tmp13 })
-return(c(list(.s2_sum(local({ .tmp16 <- list(); for (.tmp17 in .s2_iter(.s2_method(`shares`, "values"))) { `value` <- .tmp17; .tmp16[length(.tmp16) + 1L] <- list(.s2_multiply(`value`, `value`)) }; .tmp16 }))), list(.s2_merge(`detail`, .s2_dict(list("selection_reason"), list("regional_concentration")), .s2_dict(list("regional_shares"), list(`shares`))))))
+return(c(list(.s2_fsum(local({ .tmp16 <- list(); for (.tmp17 in .s2_iter(.s2_method(`shares`, "values"))) { `value` <- .tmp17; .tmp16[length(.tmp16) + 1L] <- list(.s2_multiply(`value`, `value`)) }; .tmp16 }))), list(.s2_merge(`detail`, .s2_dict(list("selection_reason"), list("regional_concentration")), .s2_dict(list("regional_shares"), list(`shares`))))))
 }
 
 # Source: underwriting.py:149
@@ -10065,8 +10065,8 @@ if (.s2_truth((!is.null(`upper`)))) {
 `terms` <- c(`terms`, .s2_iter(c(list(.s2_multiply(`second`, `q2`)), list(.s2_multiply(-(.s2_multiply(`upper`, `q0`)), `upper`)), list(.s2_multiply(.s2_multiply(.s2_multiply(`upper`, `q0`), `gap`), 2)), list(.s2_multiply(.s2_multiply(-(.s2_multiply(`mean`, `q1`)), `gap`), 2)))))
 }
 .s2_native_require(.s2_all(local({ .tmp10 <- list(); for (.tmp11 in .s2_iter(`terms`)) { `t` <- .tmp11; .tmp10[length(.tmp10) + 1L] <- list(is.finite(`t`)) }; .tmp10 })), "estimate", "intermediate moment overflow", "REVIEW_REQUIRED")
-`numerator` <- .s2_sum(`terms`)
-`error_bound` <- .s2_multiply(.s2_multiply(64, .Machine$double.eps), .s2_sum(local({ .tmp12 <- list(); for (.tmp13 in .s2_iter(`terms`)) { `t` <- .tmp13; .tmp12[length(.tmp12) + 1L] <- list(abs(`t`)) }; .tmp12 })))
+`numerator` <- .s2_fsum(`terms`)
+`error_bound` <- .s2_multiply(.s2_multiply(64, .Machine$double.eps), .s2_fsum(local({ .tmp12 <- list(); for (.tmp13 in .s2_iter(`terms`)) { `t` <- .tmp13; .tmp12[length(.tmp12) + 1L] <- list(abs(`t`)) }; .tmp12 })))
 .s2_native_require((.s2_compare(`numerator`, `error_bound`, ">")), "estimate", "retained moment unresolved or lost to cancellation", "REVIEW_REQUIRED")
 `value` <- sqrt(.s2_divide(`numerator`, `second`))
 .s2_native_require(.s2_and(is.finite(`value`), (.s2_compare(`value`, .s2_add(1, .s2_multiply(64, .Machine$double.eps)), "<="))), "estimate", "retained-loss moment inconsistent with numerical bounds", "REVIEW_REQUIRED")
@@ -10268,7 +10268,7 @@ return(c(list(.s2_at(`values`, `chosen`)), list(.s2_merge(.s2_dict(list("paramet
 `delta` <- .s2_number(`mixing`, "mixing", 0, 1)
 `gamma` <- .s2_number(`log_coefficient`, "log_coefficient")
 `max_x` <- .s2_max(`xs`)
-`log_mean_x` <- .s2_add(log(`max_x`), log(.s2_divide(.s2_sum(local({ .tmp9 <- list(); for (.tmp10 in .s2_iter(`xs`)) { `x` <- .tmp10; .tmp9[length(.tmp9) + 1L] <- list(.s2_divide(`x`, `max_x`)) }; .tmp9 })), `count`)))
+`log_mean_x` <- .s2_add(log(`max_x`), log(.s2_divide(.s2_fsum(local({ .tmp9 <- list(); for (.tmp10 in .s2_iter(`xs`)) { `x` <- .tmp10; .tmp9[length(.tmp9) + 1L] <- list(.s2_divide(`x`, `max_x`)) }; .tmp9 })), `count`)))
 `log_ratios` <- local({ .tmp11 <- list(); for (.tmp12 in .s2_iter(.s2_zip(`xs`, `ys`))) { .tmp13 <- .tmp12; `x` <- .s2_at(.tmp13, 0); `y` <- .s2_at(.tmp13, 1); .tmp11[length(.tmp11) + 1L] <- list(.s2_subtract(log(`y`), log(`x`))) }; .tmp11 })
 `variances` <- list()
 for (.tmp14 in .s2_iter(`xs`)) {
@@ -10293,9 +10293,9 @@ if (.s2_truth((.s2_equal(`delta`, 0)))) {
 `smallest` <- .s2_min(`variances`)
 `weights` <- local({ .tmp17 <- list(); for (.tmp18 in .s2_iter(`variances`)) { `v` <- .tmp18; .tmp17[length(.tmp17) + 1L] <- list(.s2_divide(`smallest`, `v`)) }; .tmp17 })
 .s2_native_require(.s2_all(local({ .tmp19 <- list(); for (.tmp20 in .s2_iter(`weights`)) { `w` <- .tmp20; .tmp19[length(.tmp19) + 1L] <- list((.s2_compare(`w`, 0, ">"))) }; .tmp19 })), "data", "precision weights lost to underflow", "REVIEW_REQUIRED")
-`total_weight` <- .s2_sum(`weights`)
+`total_weight` <- .s2_fsum(`weights`)
 `anchor` <- .s2_at(`log_ratios`, 0)
-`centered_mean` <- .s2_divide(.s2_sum(local({ .tmp21 <- list(); for (.tmp22 in .s2_iter(.s2_zip(`weights`, `log_ratios`))) { .tmp23 <- .tmp22; `w` <- .s2_at(.tmp23, 0); `r` <- .s2_at(.tmp23, 1); .tmp21[length(.tmp21) + 1L] <- list(.s2_multiply(`w`, .s2_subtract(`r`, `anchor`))) }; .tmp21 })), `total_weight`)
+`centered_mean` <- .s2_divide(.s2_fsum(local({ .tmp21 <- list(); for (.tmp22 in .s2_iter(.s2_zip(`weights`, `log_ratios`))) { .tmp23 <- .tmp22; `w` <- .s2_at(.tmp23, 0); `r` <- .s2_at(.tmp23, 1); .tmp21[length(.tmp21) + 1L] <- list(.s2_multiply(`w`, .s2_subtract(`r`, `anchor`))) }; .tmp21 })), `total_weight`)
 `average_variance` <- .s2_multiply(.s2_divide(`smallest`, `total_weight`), `count`)
 `log_sigma` <- .s2_add(.s2_add(.s2_add(`gamma`, `anchor`), `centered_mean`), .s2_divide(`average_variance`, 2))
 .s2_native_require(.s2_and(is.finite(`log_sigma`), (.s2_compare(`log_sigma`, log(.Machine$double.xmax), "<="))), "sigma", "sigma outside finite numeric range", "REVIEW_REQUIRED")
@@ -10310,7 +10310,7 @@ for (.tmp24 in .s2_iter(.s2_zip(`log_ratios`, `variances`))) {
 .s2_native_require(is.finite(`contribution`), "objective", "likelihood outside finite numeric range", "REVIEW_REQUIRED")
 `contributions` <- c(`contributions`, list(`contribution`))
 }
-`objective` <- .s2_sum(`contributions`)
+`objective` <- .s2_fsum(`contributions`)
 .s2_native_require(is.finite(`objective`), "objective", "likelihood outside finite numeric range", "REVIEW_REQUIRED")
 return(c(list(`sigma`), list(.s2_merge(.s2_dict(list("mixing"), list(`delta`)), .s2_dict(list("log_coefficient"), list(`gamma`)), .s2_dict(list("years"), list(`count`)), .s2_dict(list("log_sigma"), list(`log_sigma`)), .s2_dict(list("lognormal_variances"), list(`variances`)), .s2_dict(list("normalized_precision_weights"), list(local({ .tmp26 <- list(); for (.tmp27 in .s2_iter(`weights`)) { `w` <- .tmp27; .tmp26[length(.tmp26) + 1L] <- list(.s2_divide(`w`, `total_weight`)) }; .tmp26 }))), .s2_dict(list("objective"), list(`objective`))))))
 }
@@ -10402,15 +10402,15 @@ for (.tmp4 in .s2_iter(c(list(c(list("usp_reserve2_minimum_accident_years"), lis
 `c` <- local({ .tmp20 <- list(); for (.tmp23 in .s2_iter(`amounts`)) { `row` <- .tmp23; .tmp20[length(.tmp20) + 1L] <- list(local({ .tmp21 <- list(); for (.tmp22 in .s2_iter(`row`)) { `v` <- .tmp22; .tmp21[length(.tmp21) + 1L] <- list(.s2_divide(`v`, `scale`)) }; .tmp21 })) }; .tmp20 })
 .s2_native_require(.s2_all(local({ .tmp24 <- list(); for (.tmp26 in .s2_iter(`c`)) { `row` <- .tmp26; for (.tmp25 in .s2_iter(`row`)) { `v` <- .tmp25; .tmp24[length(.tmp24) + 1L] <- list((.s2_compare(`v`, 0, ">"))) } }; .tmp24 })), "cumulative_claims", "normalized cells lost to underflow", "REVIEW_REQUIRED")
 `last` <- .s2_subtract(`count`, 1)
-`sums` <- local({ .tmp27 <- list(); for (.tmp30 in .s2_iter(.s2_range(`last`))) { `j` <- .tmp30; .tmp27[length(.tmp27) + 1L] <- list(.s2_sum(local({ .tmp28 <- list(); for (.tmp29 in .s2_iter(.s2_range(.s2_subtract(`last`, `j`)))) { `i` <- .tmp29; .tmp28[length(.tmp28) + 1L] <- list(.s2_at(.s2_at(`c`, `i`), `j`)) }; .tmp28 }))) }; .tmp27 })
-`updated_sums` <- local({ .tmp31 <- list(); for (.tmp34 in .s2_iter(.s2_range(`last`))) { `j` <- .tmp34; .tmp31[length(.tmp31) + 1L] <- list(.s2_sum(local({ .tmp32 <- list(); for (.tmp33 in .s2_iter(.s2_range(.s2_add(.s2_subtract(`last`, `j`), 1)))) { `i` <- .tmp33; .tmp32[length(.tmp32) + 1L] <- list(.s2_at(.s2_at(`c`, `i`), `j`)) }; .tmp32 }))) }; .tmp31 })
-`factors` <- local({ .tmp35 <- list(); for (.tmp38 in .s2_iter(.s2_range(`last`))) { `j` <- .tmp38; .tmp35[length(.tmp35) + 1L] <- list(.s2_divide(.s2_sum(local({ .tmp36 <- list(); for (.tmp37 in .s2_iter(.s2_range(.s2_subtract(`last`, `j`)))) { `i` <- .tmp37; .tmp36[length(.tmp36) + 1L] <- list(.s2_at(.s2_at(`c`, `i`), .s2_add(`j`, 1))) }; .tmp36 })), .s2_at(`sums`, `j`))) }; .tmp35 })
+`sums` <- local({ .tmp27 <- list(); for (.tmp30 in .s2_iter(.s2_range(`last`))) { `j` <- .tmp30; .tmp27[length(.tmp27) + 1L] <- list(.s2_fsum(local({ .tmp28 <- list(); for (.tmp29 in .s2_iter(.s2_range(.s2_subtract(`last`, `j`)))) { `i` <- .tmp29; .tmp28[length(.tmp28) + 1L] <- list(.s2_at(.s2_at(`c`, `i`), `j`)) }; .tmp28 }))) }; .tmp27 })
+`updated_sums` <- local({ .tmp31 <- list(); for (.tmp34 in .s2_iter(.s2_range(`last`))) { `j` <- .tmp34; .tmp31[length(.tmp31) + 1L] <- list(.s2_fsum(local({ .tmp32 <- list(); for (.tmp33 in .s2_iter(.s2_range(.s2_add(.s2_subtract(`last`, `j`), 1)))) { `i` <- .tmp33; .tmp32[length(.tmp32) + 1L] <- list(.s2_at(.s2_at(`c`, `i`), `j`)) }; .tmp32 }))) }; .tmp31 })
+`factors` <- local({ .tmp35 <- list(); for (.tmp38 in .s2_iter(.s2_range(`last`))) { `j` <- .tmp38; .tmp35[length(.tmp35) + 1L] <- list(.s2_divide(.s2_fsum(local({ .tmp36 <- list(); for (.tmp37 in .s2_iter(.s2_range(.s2_subtract(`last`, `j`)))) { `i` <- .tmp37; .tmp36[length(.tmp36) + 1L] <- list(.s2_at(.s2_at(`c`, `i`), .s2_add(`j`, 1))) }; .tmp36 })), .s2_at(`sums`, `j`))) }; .tmp35 })
 .s2_native_require(.s2_all(local({ .tmp39 <- list(); for (.tmp40 in .s2_iter(`factors`)) { `f` <- .tmp40; .tmp39[length(.tmp39) + 1L] <- list(.s2_and(is.finite(`f`), (.s2_compare(`f`, 0, ">")))) }; .tmp39 })), "development_factors", "unresolved or overflowing development factor", "REVIEW_REQUIRED")
 `variances` <- list()
 for (.tmp41 in .s2_iter(.s2_range(.s2_subtract(`last`, 1)))) {
 `j` <- .tmp41
 `residuals` <- local({ .tmp42 <- list(); for (.tmp43 in .s2_iter(.s2_range(.s2_subtract(`last`, `j`)))) { `i` <- .tmp43; .tmp42[length(.tmp42) + 1L] <- list(.s2_divide(.s2_subtract(.s2_at(.s2_at(`c`, `i`), .s2_add(`j`, 1)), .s2_multiply(.s2_at(`factors`, `j`), .s2_at(.s2_at(`c`, `i`), `j`))), sqrt(.s2_at(.s2_at(`c`, `i`), `j`)))) }; .tmp42 })
-`variance` <- .s2_divide(.s2_sum(local({ .tmp44 <- list(); for (.tmp45 in .s2_iter(`residuals`)) { `r` <- .tmp45; .tmp44[length(.tmp44) + 1L] <- list(.s2_multiply(`r`, `r`)) }; .tmp44 })), .s2_subtract(.s2_subtract(`last`, `j`), 1))
+`variance` <- .s2_divide(.s2_fsum(local({ .tmp44 <- list(); for (.tmp45 in .s2_iter(`residuals`)) { `r` <- .tmp45; .tmp44[length(.tmp44) + 1L] <- list(.s2_multiply(`r`, `r`)) }; .tmp44 })), .s2_subtract(.s2_subtract(`last`, `j`), 1))
 .s2_native_require(.s2_and(is.finite(`variance`), .s2_or((.s2_compare(`variance`, 0, ">")), .s2_all(local({ .tmp46 <- list(); for (.tmp47 in .s2_iter(`residuals`)) { `r` <- .tmp47; .tmp46[length(.tmp46) + 1L] <- list((.s2_equal(`r`, 0))) }; .tmp46 })))), "development_variance", "variance unresolved at numeric precision", "REVIEW_REQUIRED")
 `variances` <- c(`variances`, list(`variance`))
 }
@@ -10432,13 +10432,13 @@ for (.tmp56 in .s2_iter(.s2_range(.s2_subtract(`last`, `i`), `last`))) {
 .s2_native_require(is.finite(`ultimate`), "ultimate", "projected ultimate outside finite range", "REVIEW_REQUIRED")
 `ultimates` <- c(`ultimates`, list(`ultimate`))
 }
-`reserve` <- .s2_sum(local({ .tmp57 <- list(); for (.tmp58 in .s2_iter(.s2_zip(`ultimates`, `c`))) { .tmp59 <- .tmp58; `u` <- .s2_at(.tmp59, 0); `row` <- .s2_at(.tmp59, 1); .tmp57[length(.tmp57) + 1L] <- list(.s2_subtract(`u`, .s2_at(`row`, -(1)))) }; .tmp57 }))
-.s2_native_require((.s2_compare(`reserve`, .s2_multiply(.s2_multiply(64, .Machine$double.eps), .s2_sum(`ultimates`)), ">")), "reserve", "nonpositive or numerically unresolved projected reserve", "REVIEW_REQUIRED")
+`reserve` <- .s2_fsum(local({ .tmp57 <- list(); for (.tmp58 in .s2_iter(.s2_zip(`ultimates`, `c`))) { .tmp59 <- .tmp58; `u` <- .s2_at(.tmp59, 0); `row` <- .s2_at(.tmp59, 1); .tmp57[length(.tmp57) + 1L] <- list(.s2_subtract(`u`, .s2_at(`row`, -(1)))) }; .tmp57 }))
+.s2_native_require((.s2_compare(`reserve`, .s2_multiply(.s2_multiply(64, .Machine$double.eps), .s2_fsum(`ultimates`)), ">")), "reserve", "nonpositive or numerically unresolved projected reserve", "REVIEW_REQUIRED")
 `terms` <- list()
 for (.tmp60 in .s2_iter(.s2_range(1, `count`))) {
 `i` <- .tmp60
 `d` <- .s2_subtract(`last`, `i`)
-`shared` <- .s2_add(.s2_divide(.s2_at(`q`, `d`), .s2_at(`sums`, `d`)), .s2_sum(local({ .tmp61 <- list(); for (.tmp62 in .s2_iter(.s2_range(.s2_add(`d`, 1), `last`))) { `j` <- .tmp62; .tmp61[length(.tmp61) + 1L] <- list(.s2_multiply(.s2_divide(.s2_at(.s2_at(`c`, .s2_subtract(`last`, `j`)), `j`), .s2_at(`updated_sums`, `j`)), .s2_divide(.s2_at(`q`, `j`), .s2_at(`sums`, `j`)))) }; .tmp61 })))
+`shared` <- .s2_add(.s2_divide(.s2_at(`q`, `d`), .s2_at(`sums`, `d`)), .s2_fsum(local({ .tmp61 <- list(); for (.tmp62 in .s2_iter(.s2_range(.s2_add(`d`, 1), `last`))) { `j` <- .tmp62; .tmp61[length(.tmp61) + 1L] <- list(.s2_multiply(.s2_divide(.s2_at(.s2_at(`c`, .s2_subtract(`last`, `j`)), `j`), .s2_at(`updated_sums`, `j`)), .s2_divide(.s2_at(`q`, `j`), .s2_at(`sums`, `j`)))) }; .tmp61 })))
 `terms` <- c(`terms`, list(.s2_multiply(.s2_multiply(.s2_at(`ultimates`, `i`), .s2_at(`ultimates`, `i`)), .s2_add(.s2_divide(.s2_at(`q`, `d`), .s2_at(.s2_at(`c`, `i`), `d`)), `shared`))))
 for (.tmp63 in .s2_iter(.s2_range(.s2_add(`i`, 1), `count`))) {
 `k` <- .tmp63
@@ -10446,7 +10446,7 @@ for (.tmp63 in .s2_iter(.s2_range(.s2_add(`i`, 1), `count`))) {
 }
 }
 .s2_native_require(.s2_all(local({ .tmp64 <- list(); for (.tmp65 in .s2_iter(`terms`)) { `t` <- .tmp65; .tmp64[length(.tmp64) + 1L] <- list(.s2_and(is.finite(`t`), (.s2_compare(`t`, 0, ">=")))) }; .tmp64 })), "MSEP", "prediction-error sum outside finite nonnegative range", "REVIEW_REQUIRED")
-`msep` <- .s2_sum(`terms`)
+`msep` <- .s2_fsum(`terms`)
 .s2_native_require((.s2_compare(`msep`, 0, ">")), "MSEP", "zero or unresolved prediction error requires review", "REVIEW_REQUIRED")
 `value` <- .s2_divide(sqrt(`msep`), `reserve`)
 `profile` <- .s2_effective("profile.json", `context`)
@@ -10540,7 +10540,7 @@ return(c(list(`value`), list(.s2_merge(.s2_dict(list("method"), list("revision")
 `goodwill` <- .s2_number(`goodwill_amount`, "goodwill_amount", 0)
 `intangible` <- .s2_number(`zero_valued_intangibles_amount`, "zero_valued_intangibles_amount", 0)
 tryCatch({
-`adjusted` <- .s2_sum(c(list(`value`), list(-(`goodwill`)), list(-(`intangible`))))
+`adjusted` <- .s2_fsum(c(list(`value`), list(-(`goodwill`)), list(-(`intangible`))))
 }, s2_overflow = function(`.error`) {
 .s2_native_require(FALSE, "adjusted_value", "adjusted participation value not representable", "REVIEW_REQUIRED")
 })
@@ -10592,9 +10592,9 @@ for (.tmp2 in .s2_iter(.s2_method(`positions`, "items"))) {
 }
 .s2_native_require(!.s2_truth(.s2_intersection(.s2_set(.s2_at(`sides`, "assets")), .s2_set(.s2_at(`sides`, "liabilities")))), "positions", "position identifiers must not occur on both balance-sheet sides")
 tryCatch({
-`total_assets` <- .s2_sum(.s2_method(.s2_at(`sides`, "assets"), "values"))
-`total_liabilities` <- .s2_sum(.s2_method(.s2_at(`sides`, "liabilities"), "values"))
-`excess` <- .s2_sum(c(.s2_iter(.s2_method(.s2_at(`sides`, "assets"), "values")), .s2_iter(local({ .tmp5 <- list(); for (.tmp6 in .s2_iter(.s2_method(.s2_at(`sides`, "liabilities"), "values"))) { `v` <- .tmp6; .tmp5[length(.tmp5) + 1L] <- list(-(`v`)) }; .tmp5 }))))
+`total_assets` <- .s2_fsum(.s2_method(.s2_at(`sides`, "assets"), "values"))
+`total_liabilities` <- .s2_fsum(.s2_method(.s2_at(`sides`, "liabilities"), "values"))
+`excess` <- .s2_fsum(c(.s2_iter(.s2_method(.s2_at(`sides`, "assets"), "values")), .s2_iter(local({ .tmp5 <- list(); for (.tmp6 in .s2_iter(.s2_method(.s2_at(`sides`, "liabilities"), "values"))) { `v` <- .tmp6; .tmp5[length(.tmp5) + 1L] <- list(-(`v`)) }; .tmp5 }))))
 }, s2_overflow = function(`.error`) {
 .s2_native_require(FALSE, "balance_sheet", "balance-sheet sum not representable", "REVIEW_REQUIRED")
 })
@@ -10625,7 +10625,7 @@ for (.tmp3 in .s2_iter(.s2_method(`cashflows`, "items"))) {
 `rows` <- .s2_put(`rows`, `label`, .s2_merge(.s2_dict(list("expected_payment"), list(`payment`)), .s2_dict(list("discount_factor"), list(`factor`)), .s2_dict(list("discounted_payment"), list(`discounted`))))
 }
 tryCatch({
-`value` <- .s2_sum(local({ .tmp5 <- list(); for (.tmp6 in .s2_iter(.s2_method(`rows`, "values"))) { `row` <- .tmp6; .tmp5[length(.tmp5) + 1L] <- list(.s2_at(`row`, "discounted_payment")) }; .tmp5 }))
+`value` <- .s2_fsum(local({ .tmp5 <- list(); for (.tmp6 in .s2_iter(.s2_method(`rows`, "values"))) { `row` <- .tmp6; .tmp5[length(.tmp5) + 1L] <- list(.s2_at(`row`, "discounted_payment")) }; .tmp5 }))
 }, s2_overflow = function(`.error`) {
 .s2_native_require(FALSE, "present_value", "present value not representable", "REVIEW_REQUIRED")
 })
@@ -10684,7 +10684,7 @@ return(c(list(`value`), list(.s2_merge(.s2_dict(list("asset_type"), list(`asset_
 `current` <- .s2_number(`current_value`, "current_value")
 `credit` <- .s2_number(`own_credit_change`, "own_credit_change")
 tryCatch({
-`value` <- .s2_sum(c(list(`current`), list(-(`credit`))))
+`value` <- .s2_fsum(c(list(`current`), list(-(`credit`))))
 }, s2_overflow = function(`.error`) {
 .s2_native_require(FALSE, "adjusted_value", "own-credit-adjusted value not representable", "REVIEW_REQUIRED")
 })
@@ -10874,9 +10874,9 @@ for (.tmp6 in .s2_iter(c(list("supervisory_reference"), list("attribution_refere
 }
 `rows` <- .s2_put(`rows`, `key`, .s2_merge(`row`, .s2_dict(list("deferred_tax_assets"), list(.s2_number(.s2_at(`row`, "deferred_tax_assets"), .s2_add(`key`, ".deferred_tax_assets"), 0))), .s2_dict(list("deferred_tax_liabilities"), list(.s2_number(.s2_at(`row`, "deferred_tax_liabilities"), .s2_add(`key`, ".deferred_tax_liabilities"), 0))), .s2_dict(list("excluded_at_selected_level"), list(.s2_or((.s2_equal(.s2_at(`row`, "basis"), "a")), (.s2_equal(`level`, "group")))))))
 }
-`totals` <- local({ .tmp8 <- .s2_object(); for (.tmp11 in .s2_iter(c(list("deferred_tax_assets"), list("deferred_tax_liabilities")))) { `field` <- .tmp11; .tmp8 <- .s2_put(.tmp8, `field`, .s2_sum(local({ .tmp9 <- list(); for (.tmp10 in .s2_iter(.s2_method(`rows`, "values"))) { `row` <- .tmp10; .tmp9[length(.tmp9) + 1L] <- list(.s2_at(`row`, `field`)) }; .tmp9 }))) }; .tmp8 })
+`totals` <- local({ .tmp8 <- .s2_object(); for (.tmp11 in .s2_iter(c(list("deferred_tax_assets"), list("deferred_tax_liabilities")))) { `field` <- .tmp11; .tmp8 <- .s2_put(.tmp8, `field`, .s2_fsum(local({ .tmp9 <- list(); for (.tmp10 in .s2_iter(.s2_method(`rows`, "values"))) { `row` <- .tmp10; .tmp9[length(.tmp9) + 1L] <- list(.s2_at(`row`, `field`)) }; .tmp9 }))) }; .tmp8 })
 .s2_native_require(.s2_and((.s2_compare(.s2_at(`totals`, "deferred_tax_assets"), `asset`, "<=")), (.s2_compare(.s2_at(`totals`, "deferred_tax_liabilities"), `liability`, "<="))), "excluded_participations", "disjoint attributed amounts exceed the supplied gross balances")
-`excluded` <- local({ .tmp12 <- .s2_object(); for (.tmp15 in .s2_iter(`totals`)) { `field` <- .tmp15; .tmp12 <- .s2_put(.tmp12, `field`, .s2_sum(local({ .tmp13 <- list(); for (.tmp14 in .s2_iter(.s2_method(`rows`, "values"))) { `row` <- .tmp14; if (.s2_truth(.s2_at(`row`, "excluded_at_selected_level"))) { .tmp13[length(.tmp13) + 1L] <- list(.s2_at(`row`, `field`)) } }; .tmp13 }))) }; .tmp12 })
+`excluded` <- local({ .tmp12 <- .s2_object(); for (.tmp15 in .s2_iter(`totals`)) { `field` <- .tmp15; .tmp12 <- .s2_put(.tmp12, `field`, .s2_fsum(local({ .tmp13 <- list(); for (.tmp14 in .s2_iter(.s2_method(`rows`, "values"))) { `row` <- .tmp14; if (.s2_truth(.s2_at(`row`, "excluded_at_selected_level"))) { .tmp13[length(.tmp13) + 1L] <- list(.s2_at(`row`, `field`)) } }; .tmp13 }))) }; .tmp12 })
 `details` <- .s2_update(`details`, .s2_merge(list(`participation_exclusions_status` = "ATTRIBUTED_EXCLUSIONS_APPLIED"), list(`valuation_level` = `level`), list(`participation_attributions` = `rows`), list(`excluded_deferred_tax_assets` = .s2_at(`excluded`, "deferred_tax_assets")), list(`excluded_deferred_tax_liabilities` = .s2_at(`excluded`, "deferred_tax_liabilities"))))
 `sources` <- c(`sources`, list("VALUATION_GUIDANCE:guideline-11:1.31"))
 return(c(list(.s2_subtract(`asset`, .s2_at(`excluded`, "deferred_tax_assets"))), list(.s2_subtract(`liability`, .s2_at(`excluded`, "deferred_tax_liabilities"))), list(`details`), list(`sources`)))

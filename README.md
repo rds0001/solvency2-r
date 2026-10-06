@@ -2,6 +2,10 @@
 
 [![R package checks](https://github.com/rds0001/solvency2-r/actions/workflows/R-CMD-check.yaml/badge.svg?branch=main)](https://github.com/rds0001/solvency2-r/actions/workflows/R-CMD-check.yaml)
 
+Automated package checks run on Linux (R release, oldrel-1 and devel), Windows
+and macOS. They include the reference tests, help examples and vignette.
+Click the status badge to inspect the individual platform results.
+
 Native R tools for offline Solvency II analysis: 399 granular calculations,
 source-bound parameters and correlation matrices, dated rule profiles, synthetic
 reference portfolios, and archived reporting definitions and checks.

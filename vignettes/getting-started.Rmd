@@ -1,0 +1,123 @@
+---
+title: "Offline Solvency II components in R"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Offline Solvency II components in R}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+library(solvency2)
+```
+
+## Select rules explicitly
+
+The same input can belong to different dated regimes. Select the profile and
+information date explicitly; the package does not look up today's rules online.
+
+```{r context}
+ctx <- Context("2025-01-17", "2026-09-23", "EUR",
+               "EU-S2-DOCUMENTS-2024-2025-v0.1")
+names(rule_profiles()$profiles)
+result <- intangible_risk(100, context = ctx)
+result
+result$sources
+```
+
+The result is an ordinary list with an S3 class. Inspect `details` for assumptions,
+scope and external qualification flags. `input_hash` and `profile_hash` identify
+the R calculation inputs and profile, not regulatory approval.
+
+## Use an individual formula or an integration graph
+
+```{r formula}
+aggregate_risk(list(premium_reserve = 3, lapse = 4),
+               matrix_id = "health_nslt", context = ctx)$value
+```
+
+```{r graph}
+nodes <- list(
+  intangible = list("function" = "intangible_risk", inputs = list(amount = 100))
+)
+# Reference cases provide the exact input names for any formula:
+case <- Filter(function(x) x[["function"]] == "intangible_risk" &&
+                 is.null(x$expected_error), reference_cases()$cases)[[1]]
+nodes$intangible$inputs <- case$kwargs
+runner <- Engine()
+runner$run(nodes, context = ctx)$results$intangible$value
+runner$run(nodes, context = ctx)$cache_hits
+```
+
+Use `list("$ref" = "node_id")` in a downstream input to refer to another node's
+value. Missing dependencies and cycles are errors. Combined results retain
+`PARTIAL` status; a graph does not certify that every obligation of an undertaking
+has been represented.
+
+## Local curves and explicit cashflows
+
+```{r curve}
+curve <- DiscountCurve("synthetic-one-year", "2025-01-17", "EUR", "custom",
+                       "invented example", list(list("2026-01-17", 0.97)))
+discount_curve_factor(curve, "2026-01-17")
+cashflows <- list("2026-01-17" = list(expected_inflows = 10,
+                                     expected_outflows = 100))
+best_estimate_with_curve(cashflows, curve, runoff_complete = TRUE,
+                        cashflow_reference = "synthetic complete runoff",
+                        context = ctx)$value
+```
+
+The CSV adapter expects exactly `date,discount_factor`; JSON carries explicit
+curve identity, date, currency, kind and provenance. Every payment date must
+have a supplied factor. Obtain market inputs separately: no adapter downloads
+data or silently invents interpolation or compounding conventions.
+
+## Analyst scenarios without changing the baseline
+
+```{r scenario}
+scenario <- ctx
+scenario$overrides <- list(NumericOverride(
+  "profile.json", list("scalars", "intangible", "value"), 0.70,
+  "Synthetic analyst sensitivity"
+))
+intangible_risk(100, context = scenario)$status
+parameter("scalars/intangible", scenario)$analyst_overrides
+intangible_risk(100, context = ctx)$value
+```
+
+Matrix paths use the source JSON's zero-based indices. Overrides have explicit
+reasons and applicability guards. Editing a returned parameter list does not
+change either the installed resource or a later calculation.
+
+## Reporting is a separate technical choice
+
+```{r reporting}
+bindings <- list(v1 = list(value = 1005, decimals = 0),
+                 v2 = list(values = list(list(value = 1000, decimals = 0))))
+reporting_bound_rule_check("BV1053-1", bindings, "2.8.2", "synthetic selection")$value
+reporting_bound_rule_check("BV1053-1", bindings, "2.10.0", "synthetic selection")$value
+```
+
+Reporting technical releases are not inferred from the regulatory `Context`.
+Tagged numbers, text, dates, QNames, Boolean values and absence have distinct
+meanings. Exact rational arithmetic preserves declared reporting precision.
+Archived activation evidence and filing preconditions are separate from the
+rule's numeric result. `reporting_instance()` assembles a source-bound XML draft
+and explicit findings, never a submission-ready filing certificate.
+
+## Handle failures and reproduce examples
+
+```{r failure}
+tryCatch(intangible_risk(Inf, context = ctx), CalculationError = function(error) {
+  list(code = error$code, field = error$field)
+})
+length(reference_cases()$cases)
+length(reference_portfolios()$portfolios)
+reference_datasets()
+```
+
+Fixed references include deliberately invalid inputs as well as successful
+examples. Regulatory tables retain source references; company inputs and market
+demonstrations are synthetic. Review the selected function's help page and the
+machine-readable `coverage()` before interpreting a component result.

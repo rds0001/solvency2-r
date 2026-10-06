@@ -1,0 +1,7 @@
+^\.git$
+^\.github$
+^\.gitignore$
+^.*\.Rcheck$
+^.*\.tar\.gz$
+^cran-comments\.md$
+^DEVELOPMENT_STATUS\.json$

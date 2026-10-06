@@ -1,0 +1,23 @@
+Package: solvency2
+Type: Package
+Title: Offline Solvency II Calculations and Regulatory Parameters
+Version: 0.5.0
+Authors@R: person("RiskDataScience GmbH", role = c("aut", "cph", "cre"),
+    email = "riskdatascience@web.de")
+Description: Native, offline calculations for Solvency II with explicit rule
+    profiles, regulatory parameters, correlation matrices and synthetic reference
+    cases. Structured results record inputs, sources and analyst overrides.
+    The implementation follows the published 'solvency2' Python reference
+    library without requiring Python at runtime. Includes local curve adapters,
+    dependency graphs and archived reporting definitions and component checks.
+License: GPL (>= 3)
+Encoding: UTF-8
+Depends: R (>= 4.1.0)
+Imports: jsonlite, digest, gmp, Rmpfr, xml2
+Suggests: testthat (>= 3.0.0), knitr, rmarkdown
+VignetteBuilder: knitr
+Config/testthat/edition: 3
+RoxygenNote: 7.3.1
+Roxygen: list(markdown = TRUE)
+URL: https://github.com/rds0001/solvency2-r
+BugReports: https://github.com/rds0001/solvency2-r/issues

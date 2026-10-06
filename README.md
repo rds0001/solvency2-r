@@ -1,5 +1,7 @@
 # solvency2 for R
 
+[![R package checks](https://github.com/rds0001/solvency2-r/actions/workflows/R-CMD-check.yaml/badge.svg?branch=main)](https://github.com/rds0001/solvency2-r/actions/workflows/R-CMD-check.yaml)
+
 Native R tools for offline Solvency II analysis: 399 granular calculations,
 source-bound parameters and correlation matrices, dated rule profiles, synthetic
 reference portfolios, and archived reporting definitions and checks.
